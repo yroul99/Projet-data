@@ -1,0 +1,9 @@
+date,season,home_team,away_team,home_pts,away_pts,home_diff,arena,city,lat,lon,capacity,altitude_m
+2021-10-22,2021,Denver Nuggets,San Antonio Spurs,114,109,5,Ball Arena,"Denver, CO",39.7487,-105.0077,19520,1609
+2021-11-05,2021,Utah Jazz,Atlanta Hawks,116,98,18,Vivint Arena,"Salt Lake City, UT",40.7683,-111.9011,18306,1288
+2021-12-01,2021,Los Angeles Lakers,Sacramento Kings,117,92,25,Crypto.com Arena,"Los Angeles, CA",34.043,-118.2673,19068,89
+2022-01-10,2021,Phoenix Suns,Toronto Raptors,99,101,-2,Footprint Center,"Phoenix, AZ",33.4457,-112.0712,18055,331
+2022-02-15,2021,Golden State Warriors,Minnesota Timberwolves,110,112,-2,Chase Center,"San Francisco, CA",37.768,-122.3877,18064,5
+2022-03-12,2021,Atlanta Hawks,Charlotte Hornets,121,119,2,State Farm Arena,"Atlanta, GA",33.7573,-84.3963,16600,320
+2022-03-22,2021,Boston Celtics,Miami Heat,95,100,-5,TD Garden,"Boston, MA",42.3663,-71.0622,19580,5
+2022-04-05,2021,Chicago Bulls,Milwaukee Bucks,106,118,-12,United Center,"Chicago, IL",41.8807,-87.6742,20917,181
