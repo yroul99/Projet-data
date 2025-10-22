@@ -20,7 +20,7 @@ def fetch_balldontlie_teams(force: bool = False) -> Path:
         return RAW_TEAMS
     headers = UA.copy()
     if BALLDONTLIE_API_KEY:
-        headers["Authorization"] = f"Bearer {BALLDONTLIE_API_KEY}"
+        headers["Authorization"] = f"Bearer {87b6c405-cb91-4566-a530-a5f92945adbe}"
     r = requests.get(ENDPOINTS["bl_teams"], headers=headers, timeout=30)
     r.raise_for_status()
     _save_json(RAW_TEAMS, r.json())
@@ -33,7 +33,7 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
 
     headers = UA.copy()
     if BALLDONTLIE_API_KEY:
-        headers["Authorization"] = f"Bearer {BALLDONTLIE_API_KEY}"
+        headers["Authorization"] = f"Bearer {87b6c405-cb91-4566-a530-a5f92945adbe}"
 
     url = ENDPOINTS["bl_games"]
     all_games = []
