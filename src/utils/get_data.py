@@ -134,11 +134,11 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
 # ---------- WIKIDATA (arènes NBA) ----------
 def fetch_wikidata_arenas(force: bool=False) -> Path:
     """
-    Arènes NBA via Wikidata:
+    Arènes NBA via Wikidata (CSV):
       - tenant (P466) = équipe NBA
       - capacité (P1083)
-      - lat/lon en clair depuis le nœud coord (p:P625/psv:P625 → wikibase:geoLatitude/geoLongitude)
-    Écrit un CSV brut dans RAW_ARENAS.
+      - lat/lon (via p:P625/psv:P625 → wikibase:geoLatitude/geoLongitude)
+    Écrit un VRAI CSV dans RAW_ARENAS.
     """
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
@@ -156,15 +156,25 @@ def fetch_wikidata_arenas(force: bool=False) -> Path:
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
     }
     """
-    r = requests.get(
-        ENDPOINTS["wd_sparql"],
-        params={"format": "csv", "query": q},
-        headers={"User-Agent": "esiee-projet-data/1.0"},
-        timeout=60
-    )
+    headers = {
+        "User-Agent": "esiee-projet-data/1.0",
+        "Accept": "text/csv",  # <-- important
+    }
+    params = {
+        "query": q,
+        "format": "text/csv",  # <-- important (pas juste "csv")
+    }
+    r = requests.get(ENDPOINTS["wd_sparql"], params=params, headers=headers, timeout=60)
     r.raise_for_status()
+
+    # Sécurité : si malgré tout on reçoit du XML, on le signale
+    ctype = r.headers.get("Content-Type","").lower()
+    if "xml" in ctype or r.text.lstrip().startswith("<?xml"):
+        raise RuntimeError("Wikidata a renvoyé du XML au lieu du CSV. Réessaie (rate-limit), ou vérifie Accept/format.")
+
     RAW_ARENAS.write_bytes(r.content)
     return RAW_ARENAS
+
 
 
 # ---------- Agrégateur ----------
