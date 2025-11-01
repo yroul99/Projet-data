@@ -1,0 +1,2733 @@
+{
+  "head" : {
+    "vars" : [ "arena", "arenaLabel", "teamLabel", "capacity", "lat", "lon" ]
+  },
+  "results" : {
+    "bindings" : [ {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q112148376"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Earth"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Michael Jordan"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q112148376"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Earth"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "LeBron James"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q76318"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.641388888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-79.389166666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "39150"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Rogers Centre"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Toronto Raptors"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q82294"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.768333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-111.901111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19911"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Delta Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Utah Jazz"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q93831"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "38.649166666667"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-121.51805555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16517"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "ARCO Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Sacramento Kings"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186080"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "34.043055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-118.26722222222"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19060"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Crypto.com Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Clippers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186080"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "34.043055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-118.26722222222"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19060"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Crypto.com Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Lakers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186125"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.750555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.993611111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20789"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186125"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.750555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.993611111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186125"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.750555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.993611111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19812"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186125"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.750555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.993611111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q186125"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.750555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.993611111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18006"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q223240"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "38.898055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-77.020833333333"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20674"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Capital One Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Washington Wizards"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q282675"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "44.979444444444"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-93.276111111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19356"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Target Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Minnesota Timberwolves"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q298573"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.426944444444"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-98.4375"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18581"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Frost Bank Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "San Antonio Spurs"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q387157"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.496388888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-81.688055555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20562"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Rocket Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Cleveland Cavaliers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q406972"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.643333333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-79.379166666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19800"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Scotiabank Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Toronto Raptors"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q420129"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "25.781388888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-80.188055555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Kaseya Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Miami Heat"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q432105"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.366302777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-71.062227777778"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18624"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "TD Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Boston Celtics"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q463345"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "32.790555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-96.810277777778"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19200"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "American Airlines Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Dallas Mavericks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q481794"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "28.548888888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-81.386666666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "15077"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Amway Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Orlando Magic"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q481795"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "28.539167"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-81.383611"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18846"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Kia Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Orlando Magic"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q517318"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "49.277777777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-123.10888888889"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18422"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Rogers Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Vancouver Grizzlies"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q538218"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.811666666667"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-74.0675"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20049"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Meadowlands Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Brooklyn Nets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q545007"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.763888888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-86.155555555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18165"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Gainbridge Fieldhouse"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Indiana Pacers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q549437"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "45.532222222222"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-122.66944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "12888"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Veterans Memorial Coliseum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Portland Trail Blazers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q632138"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "35.186388888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-80.912777777778"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "24042"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Charlotte Coliseum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New Orleans Pelicans"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q639129"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "33.95821"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-118.342"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Kia Forum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Lakers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q639975"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.880555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.674166666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "23500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "United Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Bulls"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q641212"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "35.138333333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-90.050555555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18119"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "FedExForum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Memphis Grizzlies"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q665434"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "35.463333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-97.515"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18203"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Paycom Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Oklahoma City Thunder"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q665434"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "35.463333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-97.515"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18203"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Paycom Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New Orleans Pelicans"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q670890"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "33.469444"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-112.096667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "14870"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Arizona Veterans Memorial Coliseum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Phoenix Suns"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q737976"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.043611111111"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.916944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18800"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Bradley Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Milwaukee Bucks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q745327"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "44.975092"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-93.263278"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Minneapolis Armory"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Lakers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q756452"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.950833333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-90.081111111111"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "75167"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Caesars Superdome"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Utah Jazz"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q795470"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.748611111111"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-105.0075"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19155"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Ball Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Denver Nuggets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q795470"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.748611111111"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-105.0075"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17417"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Ball Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Denver Nuggets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q807966"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.68265"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.974689"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17732"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Barclays Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Brooklyn Nets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q818735"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.90115"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-75.17197"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20328"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Xfinity Mobile Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Philadelphia 76ers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q894567"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.365697222222"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-71.061716666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "14448"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Boston Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Boston Celtics"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q919959"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.3411"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-71.0844"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "4666"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Matthews Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Boston Celtics"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q983870"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "35.225"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-80.839166666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19077"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Spectrum Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Charlotte Hornets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1072186"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "44.973888888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-93.258055555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "64121"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Hubert H. Humphrey Metrodome"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Minnesota Timberwolves"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1104711"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.3261"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-83.0469"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "12191"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "TCF Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Detroit Pistons"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1123297"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "33.757222222222"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-84.396388888889"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19445"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "State Farm Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Atlanta Hawks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1139021"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "37.750277777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-122.20305555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19596"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Oakland Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Golden State Warriors"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1142808"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.042222222222"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.916944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "12700"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "UW–Milwaukee Panther Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Milwaukee Bucks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1145169"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.420134"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-98.483299"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16057"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "HemisFair Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "San Antonio Spurs"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1166157"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.750833333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-95.362222222222"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18023"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Toyota Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Houston Rockets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1327633"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.696944444444"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-83.245555555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "22076"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "The Palace of Auburn Hills"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Detroit Pistons"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1347442"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "45.531666666667"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-122.66666666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20636"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Moda Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Portland Trail Blazers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1347442"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "45.531666666667"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-122.66666666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19980"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Moda Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Portland Trail Blazers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1438829"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "32.749"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-97.3277"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "11200"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Fort Worth Convention Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "San Antonio Spurs"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1515840"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.948888888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-90.081944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Smoothie King Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New Orleans Pelicans"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1515840"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.948888888889"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-90.081944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17805"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Smoothie King Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New Orleans Pelicans"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1538690"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "33.445833333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-112.07138888889"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "19023"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Mortgage Matchup Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Phoenix Suns"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1571403"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "34.013055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-118.28444444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16161"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Memorial Sports Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Clippers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1571403"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "34.013055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-118.28444444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16161"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Memorial Sports Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Lakers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1666325"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.81614"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.64616"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "9000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "International Amphitheatre"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Washington Wizards"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1814534"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.662222222222"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-79.380277777778"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "12473"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Maple Leaf Gardens"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Toronto Raptors"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1857422"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "25.780833333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-80.195555555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Miami Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Miami Heat"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1859962"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "32.772777777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-96.808055555556"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17007"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Reunion Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Dallas Mavericks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q1970067"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "33.7575"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-84.396666666667"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16181"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Omni Coliseum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Atlanta Hawks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2081796"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.742777777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-105.0225"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16600"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "McNichols Sports Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Denver Nuggets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2226897"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "35.155555555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-90.051944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "21000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Pyramid Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Memphis Grizzlies"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2435324"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.730277777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-95.435"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "15676"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Lakewood Church Central Campus"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Houston Rockets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2703852"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.8816993"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.6728318"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18676"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Stadium"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Bulls"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2703852"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.8816993"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.6728318"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18472"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Stadium"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Bulls"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2703852"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.8816993"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.6728318"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17317"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Stadium"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chicago Bulls"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2927640"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.878055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-78.8775"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Buffalo Memorial Auditorium"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Atlanta Hawks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2927640"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.878055555556"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-78.8775"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "14337"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Buffalo Memorial Auditorium"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Atlanta Hawks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q2982682"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "41.245277777778"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-81.593888888889"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "20273"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Coliseum at Richfield"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Cleveland Cavaliers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q3106621"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "32.755278"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-117.212222"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "12000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Pechanga Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Houston Rockets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q3294309"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.768333333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-86.151944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "16530"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Market Square Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Indiana Pacers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q3656844"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "38.9025"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-76.846944444444"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18756"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Capital Centre"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Washington Wizards"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q4653610"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "38.647303"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-121.498531"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "10333"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "ARCO Arena I"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Sacramento Kings"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q5259672"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "39.744444"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-104.9975"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "12500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Denver Auditorium Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Denver Nuggets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q5876764"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.724722"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-95.346944"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "10000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Fertitta Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Houston Rockets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q5876764"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.724722"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-95.346944"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "8479"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Fertitta Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Houston Rockets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q5876764"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "29.724722"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-95.346944"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "7100"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Fertitta Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Houston Rockets"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q6728098"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.7624"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.9877"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18496"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q6728098"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.7624"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.9877"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "15925"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Madison Square Garden"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "New York Knicks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q7011384"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "38.58"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-121.5"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18500"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Golden 1 Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Sacramento Kings"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q7830871"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "33.9217"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-118.388"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Toyota Sports Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Lakers"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q15262098"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "37.767833333333"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-122.38738888889"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "18000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Chase Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Golden State Warriors"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q17030210"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.766"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-111.895"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Salt Palace"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Utah Jazz"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q18154984"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.3412"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-83.0549"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Little Caesars Arena"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Detroit Pistons"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q20372160"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.0451"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-87.9182"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "17341"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Fiserv Forum"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Milwaukee Bucks"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q22095353"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "43.63194444"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-79.42805556"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "OVO Athletic Centre"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Toronto Raptors"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q40151582"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "40.775733"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-73.964277"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "960 Fifth Avenue"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Connie Simmons"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q55165062"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "42.35739"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-71.14578"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "The Auerbach Center"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Boston Celtics"
+      }
+    }, {
+      "arena" : {
+        "type" : "uri",
+        "value" : "http://www.wikidata.org/entity/Q125537911"
+      },
+      "lat" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "44.969"
+      },
+      "lon" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#double",
+        "type" : "literal",
+        "value" : "-93.274"
+      },
+      "capacity" : {
+        "datatype" : "http://www.w3.org/2001/XMLSchema#decimal",
+        "type" : "literal",
+        "value" : "10000"
+      },
+      "arenaLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Minneapolis Auditorium"
+      },
+      "teamLabel" : {
+        "xml:lang" : "en",
+        "type" : "literal",
+        "value" : "Los Angeles Lakers"
+      }
+    } ]
+  }
+}
