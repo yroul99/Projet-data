@@ -137,30 +137,35 @@ def fetch_wikidata_arenas(force: bool=False) -> Path:
     Arènes NBA via Wikidata:
       - tenant (P466) = équipe NBA
       - capacité (P1083)
-      - coord (P625) sous forme 'Point(lon lat)'
+      - lat/lon en clair depuis le nœud coord (p:P625/psv:P625 → wikibase:geoLatitude/geoLongitude)
     Écrit un CSV brut dans RAW_ARENAS.
     """
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
 
     q = """
-    SELECT ?arena ?arenaLabel ?teamLabel ?capacity ?coord WHERE {
+    SELECT ?arena ?arenaLabel ?teamLabel ?capacity ?lat ?lon WHERE {
       ?team wdt:P118 wd:Q155223 .        # league = NBA
       ?arena wdt:P466 ?team .            # tenant (occupant)
       OPTIONAL { ?arena wdt:P1083 ?capacity }   # capacity
-      OPTIONAL { ?arena wdt:P625  ?coord }      # Point(lon lat)
+      OPTIONAL {
+        ?arena p:P625/psv:P625 ?coordNode .
+        ?coordNode wikibase:geoLatitude ?lat ;
+                   wikibase:geoLongitude ?lon .
+      }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
     }
     """
     r = requests.get(
         ENDPOINTS["wd_sparql"],
         params={"format": "csv", "query": q},
-        headers=UA,
+        headers={"User-Agent": "esiee-projet-data/1.0"},
         timeout=60
     )
     r.raise_for_status()
     RAW_ARENAS.write_bytes(r.content)
     return RAW_ARENAS
+
 
 # ---------- Agrégateur ----------
 def get_raw(force: bool = False) -> dict[str, Path]:
