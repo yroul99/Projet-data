@@ -134,20 +134,29 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
 # ---------- WIKIDATA (arènes NBA) ----------
 def fetch_wikidata_arenas(force: bool=False) -> Path:
     """
-    Arènes NBA via Wikidata (JSON brut):
-      - tenant (P466) = équipe NBA
-      - capacité (P1083)
-      - lat/lon (via p:P625/psv:P625 → wikibase:geoLatitude/geoLongitude)
-    Écrit un JSON brut dans RAW_ARENAS.
+    Arènes NBA 2021-22 via Wikidata (JSON) :
+    on part de l'équipe (P118 = NBA), puis on suit la déclaration P115 'home venue'
+    en filtrant par les qualifs P580/P582 pour couvrir la saison 2021-10-01 → 2022-04-30.
     """
+    from config import ENDPOINTS, RAW_ARENAS
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
 
     q = """
-    SELECT ?arena ?arenaLabel ?teamLabel ?capacity ?lat ?lon WHERE {
-      ?team wdt:P118 wd:Q155223 .        # league = NBA
-      ?arena wdt:P466 ?team .            # tenant (occupant)
-      OPTIONAL { ?arena wdt:P1083 ?capacity }   # capacity
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+    SELECT ?team ?teamLabel ?arena ?arenaLabel ?capacity ?lat ?lon WHERE {
+      ?team wdt:P118 wd:Q155223 .          # league = NBA
+      ?team p:P115 ?venueStmt .            # déclaration 'home venue'
+      ?venueStmt ps:P115 ?arena .
+
+      OPTIONAL { ?venueStmt pq:P580 ?start . }   # start time
+      OPTIONAL { ?venueStmt pq:P582 ?end . }     # end time
+
+      # Intervalles qui couvrent la saison régulière 2021-22
+      FILTER( (!BOUND(?start) || ?start <= "2022-04-30T00:00:00Z"^^xsd:dateTime) &&
+              (!BOUND(?end)   || ?end   >= "2021-10-01T00:00:00Z"^^xsd:dateTime) )
+
+      OPTIONAL { ?arena wdt:P1083 ?capacity }  # capacity
       OPTIONAL {
         ?arena p:P625/psv:P625 ?coordNode .
         ?coordNode wikibase:geoLatitude ?lat ;
@@ -160,23 +169,14 @@ def fetch_wikidata_arenas(force: bool=False) -> Path:
         "User-Agent": "esiee-projet-data/1.0",
         "Accept": "application/sparql-results+json",
     }
-    params = {
-        "query": q,
-        "format": "json",
-    }
+    params = {"query": q, "format": "json"}
     r = requests.get(ENDPOINTS["wd_sparql"], params=params, headers=headers, timeout=60)
     r.raise_for_status()
-
-    # Sécurité: si jamais ce n'est pas du JSON, on lève une erreur claire
     ctype = r.headers.get("Content-Type","").lower()
     if "json" not in ctype and not r.text.lstrip().startswith("{"):
-        raise RuntimeError("Wikidata n'a pas renvoyé du JSON. Réessaie (WDQS rate-limit) ou vérifie les headers.")
-
+        raise RuntimeError("Wikidata n'a pas renvoyé du JSON.")
     RAW_ARENAS.write_bytes(r.content)
     return RAW_ARENAS
-
-
-
 
 # ---------- Agrégateur ----------
 def get_raw(force: bool = False) -> dict[str, Path]:
