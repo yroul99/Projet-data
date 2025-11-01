@@ -4,7 +4,15 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, Any
 import requests
-from config import ENDPOINTS, RAW_GAMES, RAW_TEAMS, SEASON, BALLDONTLIE_API_KEY
+
+from config import (
+    ENDPOINTS,
+    RAW_GAMES,
+    RAW_TEAMS,
+    RAW_ARENAS,   # <-- AJOUT
+    SEASON,
+    BALLDONTLIE_API_KEY
+)
 
 UA = {"User-Agent": "esiee-projet-data/1.0"}
 
@@ -30,12 +38,13 @@ def _get_with_backoff(url: str, *, params: Dict[str, Any], headers: Dict[str, st
             ra = r.headers.get("Retry-After")
             wait_s = int(ra) + 1 if ra and ra.isdigit() else max(2, int(delay))
             time.sleep(wait_s)
-            delay = min(delay * 2, 30)  # expo backoff, plafonné
+            delay = min(delay * 2, 30)  # expo backoff plafonné
             continue
         r.raise_for_status()
         return r
     raise RuntimeError(f"Too many 429 responses on {url} with {params}")
 
+# ---------- BALLDONTLIE (équipes) ----------
 def fetch_balldontlie_teams(force: bool = False) -> Path:
     if _fresh_enough(RAW_TEAMS) and not force:
         return RAW_TEAMS
@@ -43,6 +52,7 @@ def fetch_balldontlie_teams(force: bool = False) -> Path:
     _save_json(RAW_TEAMS, r.json())
     return RAW_TEAMS
 
+# ---------- BALLDONTLIE (matchs régulière 2021-22, pagination par CURSEUR) ----------
 def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) -> Path:
     """
     NBA 2021-22 (saison régulière) avec fenêtres mensuelles + pagination CURSEUR.
@@ -50,14 +60,11 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     - Dédup par id
     - Snapshot après chaque page
     """
-    from config import ENDPOINTS, RAW_GAMES, SEASON
-    import json, time, requests
-
     RAW_GAMES.parent.mkdir(parents=True, exist_ok=True)
     url = ENDPOINTS["bl_games"]
     headers = _auth_headers()
 
-    # Reprise
+    # Reprise si RAW existant
     all_games, seen = [], set()
     if RAW_GAMES.exists():
         try:
@@ -124,9 +131,44 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     print(f"[done] total RAW = {len(all_games)}")
     return RAW_GAMES
 
+# ---------- WIKIDATA (arènes NBA) ----------
+def fetch_wikidata_arenas(force: bool=False) -> Path:
+    """
+    Arènes NBA via Wikidata:
+      - tenant (P466) = équipe NBA
+      - capacité (P1083)
+      - coord (P625) sous forme 'Point(lon lat)'
+    Écrit un CSV brut dans RAW_ARENAS.
+    """
+    if RAW_ARENAS.exists() and not force:
+        return RAW_ARENAS
 
+    q = """
+    SELECT ?arena ?arenaLabel ?teamLabel ?capacity ?coord WHERE {
+      ?team wdt:P118 wd:Q155223 .        # league = NBA
+      ?arena wdt:P466 ?team .            # tenant (occupant)
+      OPTIONAL { ?arena wdt:P1083 ?capacity }   # capacity
+      OPTIONAL { ?arena wdt:P625  ?coord }      # Point(lon lat)
+      SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+    }
+    """
+    r = requests.get(
+        ENDPOINTS["wd_sparql"],
+        params={"format": "csv", "query": q},
+        headers=UA,
+        timeout=60
+    )
+    r.raise_for_status()
+    RAW_ARENAS.write_bytes(r.content)
+    return RAW_ARENAS
+
+# ---------- Agrégateur ----------
 def get_raw(force: bool = False) -> dict[str, Path]:
     paths = {}
-    paths["teams"] = fetch_balldontlie_teams(force=force)
-    paths["games"] = fetch_balldontlie_games_2021(force=force, postseason=False)
+    paths["teams"]  = fetch_balldontlie_teams(force=force)
+    paths["games"]  = fetch_balldontlie_games_2021(force=force, postseason=False)
+    try:
+        paths["arenas"] = fetch_wikidata_arenas(force=force)
+    except Exception as e:
+        print("[WARN] wikidata fetch failed:", e)
     return paths
