@@ -22,7 +22,8 @@ ENDPOINTS = {
 # Fichiers RAW
 RAW_GAMES   = DATA_RAW / "balldontlie_games_2021.json"
 RAW_TEAMS   = DATA_RAW / "balldontlie_teams.json"
-RAW_ARENAS  = DATA_RAW / "wikidata_arenas.csv"
+RAW_ARENAS  = DATA_RAW / "wikidata_arenas.json"   # JSON brut depuis Wikidata
+
 # (option futurs fetch)
 # RAW_ELO     = DATA_RAW / "nba_elo.csv"
 # RAW_ELEV    = DATA_RAW / "arenas_elevation.json"
