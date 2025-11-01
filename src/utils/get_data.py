@@ -44,37 +44,64 @@ def fetch_balldontlie_teams(force: bool = False) -> Path:
     return RAW_TEAMS
 
 def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) -> Path:
-    if _fresh_enough(RAW_GAMES) and not force:
+    """Télécharge TOUTE la régulière 2021-22 avec fenêtres mensuelles + dédup par id."""
+    from config import ENDPOINTS, RAW_GAMES, SEASON
+    import json, time, requests
+
+    if RAW_GAMES.exists() and not force:
         return RAW_GAMES
 
     url = ENDPOINTS["bl_games"]
-    all_games = []
-    page = 1
     headers = _auth_headers()
+    all_games, seen = [], set()
 
-    while True:
-        params = {
-            "seasons[]": SEASON,
-            "per_page": 100,
-            "page": page,
-            "postseason": str(postseason).lower(),
-        }
-        r = _get_with_backoff(url, params=params, headers=headers)
-        payload = r.json()
-        data = payload.get("data") or []
-        if not data:
-            break
-        all_games.extend(data)
+    # Fenêtres mensuelles : évite les 429 et garantit la couverture complète
+    windows = [
+        ("2021-10-01", "2021-11-01"),
+        ("2021-11-01", "2021-12-01"),
+        ("2021-12-01", "2022-01-01"),
+        ("2022-01-01", "2022-02-01"),
+        ("2022-02-01", "2022-03-01"),
+        ("2022-03-01", "2022-04-01"),
+        ("2022-04-01", "2022-05-01"),
+    ]
 
-        # on persiste la progression pour éviter de tout perdre en cas de 429/plantage
-        _save_json(RAW_GAMES, all_games)
+    for start, end in windows:
+        page = 1
+        while True:
+            params = {
+                "seasons[]": SEASON,
+                "per_page": 100,
+                "page": page,
+                "postseason": str(postseason).lower(),
+                "start_date": start,
+                "end_date": end,
+            }
+            r = _get_with_backoff(url, params=params, headers=headers)
+            payload = r.json()
+            data = payload.get("data") or []
+            if not data:
+                break
 
-        page += 1
-        time.sleep(1.2)  # sois gentil avec le quota
+            # Ajoute seulement les nouveaux matchs (dédup robuste)
+            for g in data:
+                gid = g.get("id")
+                if gid not in seen:
+                    all_games.append(g)
+                    seen.add(gid)
 
-    # une dernière sauvegarde “propre”
+            # Sauvegarde de progression
+            _save_json(RAW_GAMES, all_games)
+
+            meta = payload.get("meta") or {}
+            if meta.get("current_page") == meta.get("total_pages"):
+                break
+            page += 1
+            time.sleep(0.8)  # throttle doux
+
     _save_json(RAW_GAMES, all_games)
     return RAW_GAMES
+
 
 def get_raw(force: bool = False) -> dict[str, Path]:
     paths = {}
