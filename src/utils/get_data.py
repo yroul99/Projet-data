@@ -45,9 +45,8 @@ def fetch_balldontlie_teams(force: bool = False) -> Path:
 
 def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) -> Path:
     """
-    Télécharge TOUTE la régulière 2021-22 (NBA) :
-    - Fenêtres mensuelles (limite les 429)
-    - Reprise sur RAW partiel (si déjà présent)
+    NBA 2021-22 (saison régulière) avec fenêtres mensuelles + pagination CURSEUR.
+    - Reprend sur un RAW partiel
     - Dédup par id
     - Snapshot après chaque page
     """
@@ -55,11 +54,10 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     import json, time, requests
 
     RAW_GAMES.parent.mkdir(parents=True, exist_ok=True)
-
     url = ENDPOINTS["bl_games"]
     headers = _auth_headers()
 
-    # ---- reprise sur RAW existant (même si force=True) ----
+    # Reprise
     all_games, seen = [], set()
     if RAW_GAMES.exists():
         try:
@@ -75,10 +73,8 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
         except Exception:
             pass
     elif not force and RAW_GAMES.exists():
-        # cas normal : on réutilise si frais (géré ailleurs par _fresh_enough)
         return RAW_GAMES
 
-    # ---- fenêtres mensuelles ----
     windows = [
         ("2021-10-01", "2021-11-01"),
         ("2021-11-01", "2021-12-01"),
@@ -89,23 +85,23 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
         ("2022-04-01", "2022-05-01"),
     ]
 
-    for (start, end) in windows:
-        page = 1
+    for start, end in windows:
+        cursor = None
         while True:
             params = {
                 "seasons[]": SEASON,
                 "per_page": 100,
-                "page": page,
                 "postseason": str(postseason).lower(),
                 "start_date": start,
                 "end_date": end,
             }
+            if cursor:
+                params["cursor"] = cursor
+
             r = _get_with_backoff(url, params=params, headers=headers)
             payload = r.json()
             data = payload.get("data") or []
-            if not data:
-                print(f"[{start}→{end}] page {page}: 0 items → break")
-                break
+            meta = payload.get("meta") or {}
 
             new_count = 0
             for g in data:
@@ -115,18 +111,14 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
                     all_games.append(g)
                     new_count += 1
 
-            # snapshot progression
             _save_json(RAW_GAMES, all_games)
+            print(f"[{start}→{end}] +{new_count} (total {len(all_games)}) cursor={meta.get('next_cursor')}")
 
-            meta = payload.get("meta") or {}
-            cur = meta.get("current_page") or page
-            tot = meta.get("total_pages") or cur
-            print(f"[{start}→{end}] page {cur}/{tot}: +{new_count} (total {len(all_games)})")
-
-            if cur >= tot:
+            cursor = meta.get("next_cursor")
+            if not data or not cursor:
                 break
-            page += 1
-            time.sleep(0.6)
+
+            time.sleep(0.4)  # throttle doux
 
     _save_json(RAW_GAMES, all_games)
     print(f"[done] total RAW = {len(all_games)}")
