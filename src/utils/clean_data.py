@@ -4,12 +4,26 @@ from pathlib import Path
 import pandas as pd
 from config import RAW_GAMES, CLEAN_2021, CLEAN_FILE, SEASON, RAW_ARENAS
 
-# ---------- Helpers ----------
+# ---------------- Helpers ----------------
 def _normalize(s: str) -> str:
-    """Normalise un nom en clé (minuscule, alphanum, espaces)."""
+    """Normalise un nom d'équipe en clé : minuscules, alphanum + espaces."""
     return re.sub(r"[^a-z0-9 ]", "", str(s).lower())
 
-# ---------- Lecture matchs ----------
+def _pick_col(df: pd.DataFrame, patterns_list: list[tuple[str, ...]]) -> str | None:
+    """
+    Retourne le nom de la première colonne dont le nom contient TOUTES les sous-chaînes
+    d'un des tuples de patterns_list (insensible à la casse).
+    Ex: patterns_list=[('team','label'),('team','name')] trouvera 'teamLabel' ou 'Team name', etc.
+    """
+    cols = list(df.columns)
+    lower = [c.lower().strip() for c in cols]
+    for pats in patterns_list:
+        for i, name in enumerate(lower):
+            if all(p in name for p in pats):
+                return cols[i]
+    return None
+
+# ---------------- Lecture matchs ----------------
 def _read_games_df(p: Path) -> pd.DataFrame:
     items = json.loads(p.read_text())
     if isinstance(items, dict) and "data" in items:
@@ -30,100 +44,99 @@ def _read_games_df(p: Path) -> pd.DataFrame:
 
     df["date"] = pd.to_datetime(df["date"]).dt.date
     df["home_diff"] = df["home_pts"] - df["away_pts"]
-    df["team_key"]  = df["home_team"].map(_normalize)  # clé pour joindre l'arène du HOME
+
+    # clé pour joindre l'arène du domicile
+    df["team_key"] = df["home_team"].map(_normalize)
 
     # Saison + dédup
     df = df[df["season"] == SEASON]
     df = df.drop_duplicates(subset="id", keep="first")
-
     return df
 
-# ---------- Lecture arènes (robuste à différents schémas) ----------
+# ---------------- Lecture arènes (ultra-robuste) ----------------
 def _read_arenas_df(p: Path) -> pd.DataFrame:
     """
-    Lit le CSV Wikidata des arènes et retourne :
+    Lit le CSV Wikidata et retourne un DF:
       team_key, arena, lat, lon, capacity
-    Tolère deux schémas :
-      - lat/lon directs (recommandé via SPARQL)
-      - colonne WKT 'coord' = 'Point(lon lat)'
-    Si plusieurs lignes par équipe : garde celle ayant coordonnées + capacité max.
+    Tolère:
+      - lat/lon directs OU une colonne WKT 'coord' = 'Point(lon lat)'
+      - noms de colonnes variables: teamLabel/arenaLabel, 'team name', etc.
+      - plusieurs lignes par équipe -> garde celle avec coords puis capacité max.
     """
     df = pd.read_csv(p)
 
-    # Normalisation lat/lon
-    has_latlon = {"lat", "lon"}.issubset(df.columns)
-    if not has_latlon and "coord" in df.columns:
-        coords = df["coord"].astype(str).str.extract(
-            r"Point\((?P<lon>-?\d+\.?\d*) (?P<lat>-?\d+\.?\d*)\)"
-        )
-        df["lat"] = pd.to_numeric(coords["lat"], errors="coerce")
-        df["lon"] = pd.to_numeric(coords["lon"], errors="coerce")
-        has_latlon = True
-    if not has_latlon:
-        # crée colonnes vides si Wikidata ne renvoie pas de coord
-        df["lat"] = pd.NA
-        df["lon"] = pd.NA
+    # 1) Identifier colonnes label équipe / arène
+    team_col = _pick_col(df, [
+        ("team", "label"), ("teamlabel",), ("team", "name"), ("club", "label")
+    ]) or _pick_col(df, [("team",)])  # dernier recours
+    arena_col = _pick_col(df, [
+        ("arena", "label"), ("arenalabel",), ("arena", "name"),
+        ("venue", "label"), ("stadium", "label"), ("arena",)
+    ])
 
-    # Capacité en numérique si présente
-    if "capacity" in df.columns:
-        df["capacity"] = pd.to_numeric(df["capacity"], errors="coerce")
-    else:
-        df["capacity"] = pd.NA
+    if team_col is None or arena_col is None:
+        # log minimal pour debug visuel
+        print("[WARN] Colonnes disponibles dans wikidata_arenas.csv:", list(df.columns))
+        raise ValueError("Impossible d'identifier les colonnes 'teamLabel'/'arenaLabel' (même approchées).")
 
-    # Clé d'équipe normalisée
-    # La requête SPARQL renvoie en général 'teamLabel' et 'arenaLabel'
-    if "teamLabel" not in df.columns or "arenaLabel" not in df.columns:
-        # Sécurités : on essaie des alternatives si jamais
-        # (mais normalement avec notre SPARQL on a ces colonnes)
-        team_col  = next((c for c in df.columns if "team"  in c.lower() and "label" in c.lower()), None)
-        arena_col = next((c for c in df.columns if "arena" in c.lower() and "label" in c.lower()), None)
-        if team_col is None or arena_col is None:
-            raise ValueError("Colonnes d'étiquettes d'équipe/salle manquantes dans le CSV Wikidata.")
-        df["teamLabel"]  = df[team_col]
-        df["arenaLabel"] = df[arena_col]
+    # 2) Lat / Lon : soit déjà là, soit via 'coord' en WKT
+    lat_col = _pick_col(df, [("lat",), ("latitude",)])
+    lon_col = _pick_col(df, [("lon",), ("long",), ("longitude",)])
+    if lat_col is None or lon_col is None:
+        coord_col = _pick_col(df, [("coord",)])
+        if coord_col:
+            coords = df[coord_col].astype(str).str.extract(
+                r"Point\((?P<lon>-?\d+\.?\d*) (?P<lat>-?\d+\.?\d*)\)"
+            )
+            df["__lat__"] = pd.to_numeric(coords["lat"], errors="coerce")
+            df["__lon__"] = pd.to_numeric(coords["lon"], errors="coerce")
+            lat_col, lon_col = "__lat__", "__lon__"
+        else:
+            # colonnes vides si indisponibles
+            df["__lat__"] = pd.NA
+            df["__lon__"] = pd.NA
+            lat_col, lon_col = "__lat__", "__lon__"
 
-    df["team_key"] = df["teamLabel"].map(_normalize)
+    # 3) Capacité (si présente, sinon NA)
+    cap_col = _pick_col(df, [("capacity",), ("seating", "capacity")])
+    if cap_col is None:
+        df["__cap__"] = pd.NA
+        cap_col = "__cap__"
 
-    # Choix d'une ligne par équipe :
-    # 1) avec coordonnées (True d'abord), 2) puis capacité décroissante
-    df["_has_coords"] = df["lat"].notna() & df["lon"].notna()
-    df["_cap_rank"]   = df["capacity"].fillna(-1)
+    # 4) Construire la sortie normalisée
+    out = pd.DataFrame({
+        "team_key": df[team_col].map(_normalize),
+        "arena": df[arena_col],
+        "lat": pd.to_numeric(df[lat_col], errors="coerce"),
+        "lon": pd.to_numeric(df[lon_col], errors="coerce"),
+        "capacity": pd.to_numeric(df[cap_col], errors="coerce"),
+    })
 
-    df = df.sort_values(["team_key", "_has_coords", "_cap_rank"], ascending=[True, False, False])
-    df = df.drop_duplicates(subset="team_key", keep="first")
+    # 5) Choisir 1 ligne par équipe: priorise (coords dispo) puis (capacité max)
+    out["_has_coords"] = out["lat"].notna() & out["lon"].notna()
+    out["_cap_rank"] = out["capacity"].fillna(-1)
+    out = out.sort_values(["team_key", "_has_coords", "_cap_rank"], ascending=[True, False, False])
+    out = out.drop_duplicates(subset="team_key", keep="first")
+    out = out.drop(columns=["_has_coords", "_cap_rank"], errors="ignore")
 
-    # Nettoie les colonnes techniques
-    df = df.drop(columns=["_has_coords", "_cap_rank"], errors="ignore")
-
-    # Schéma de sortie
-    out = df[["team_key", "arenaLabel", "lat", "lon", "capacity"]].rename(
-        columns={"arenaLabel": "arena"}
-    )
-
-    # Overrides (optionnels) : data/reference/arenas_overrides.csv
+    # 6) Overrides manuels (optionnels) : data/reference/arenas_overrides.csv
     ov_path = Path("data/reference/arenas_overrides.csv")
     if ov_path.exists():
         ov = pd.read_csv(ov_path)
         ov["team_key"] = ov["team_key"].map(_normalize)
-        # Merge prioritaire : override > wikidata
         out = out.merge(ov, on="team_key", how="outer", suffixes=("", "_ov"))
         for col in ["arena", "lat", "lon", "capacity"]:
             if col + "_ov" in out.columns:
                 out[col] = out[col + "_ov"].combine_first(out[col])
-                out = out.drop(columns=[col + "_ov"], errors="ignore")
-
-    # Types
-    out["lat"] = pd.to_numeric(out["lat"], errors="coerce")
-    out["lon"] = pd.to_numeric(out["lon"], errors="coerce")
-    out["capacity"] = pd.to_numeric(out["capacity"], errors="coerce")
+                out.drop(columns=[col + "_ov"], inplace=True, errors="ignore")
 
     return out
 
-# ---------- Clean principal ----------
+# ---------------- Clean principal ----------------
 def clean_2021() -> Path:
     df = _read_games_df(RAW_GAMES)
 
-    # Jointure des arènes (si le fichier existe)
+    # Merge arènes si dispo
     if RAW_ARENAS.exists():
         arenas = _read_arenas_df(RAW_ARENAS)
         df = df.merge(arenas, on="team_key", how="left")
@@ -131,7 +144,6 @@ def clean_2021() -> Path:
         for c in ("arena", "lat", "lon", "capacity"):
             df[c] = None
 
-    # Colonnes finales (carte + histogramme)
     cols = [
         "date", "season",
         "home_team", "away_team",
@@ -140,13 +152,10 @@ def clean_2021() -> Path:
     ]
     df_out = df[cols].copy()
 
-    # Sauvegarde
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(CLEAN_2021, index=False)
     CLEAN_FILE.write_text(CLEAN_2021.read_text())
 
-    # Petit log utile
     coords_ok = df_out[["lat", "lon"]].dropna().shape[0]
     print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
-
     return CLEAN_2021
