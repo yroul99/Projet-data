@@ -36,26 +36,34 @@ def _read_games_df(p: Path) -> pd.DataFrame:
 
 # ---------- Lecture arènes (JSON Wikidata) ----------
 def _read_arenas_json(p: Path) -> pd.DataFrame:
-    """
-    Lit le JSON SPARQL (Wikidata) et renvoie un DF:
-      team_key, arena, lat, lon, capacity
-    """
     raw = json.loads(p.read_text())
     bindings = (raw.get("results") or {}).get("bindings") or []
+
+    # alias pour harmoniser avec balldontlie (qui expose 'Los Angeles Clippers')
+    synonyms = {
+        "la clippers": "los angeles clippers",
+        "la lakers": "los angeles lakers",
+        # vieux alias au cas où
+        "new orleans hornets": "new orleans pelicans",
+    }
 
     rows = []
     for b in bindings:
         def val(name:str):
             x = b.get(name)
             return None if x is None else x.get("value")
+
         team  = val("teamLabel")
         arena = val("arenaLabel")
         cap   = val("capacity")
         lat   = val("lat")
         lon   = val("lon")
 
+        tk = _normalize(team)
+        tk = _normalize(synonyms.get(tk, tk))
+
         rows.append({
-            "team_key": _normalize(team),
+            "team_key": tk,
             "arena": arena,
             "lat": pd.to_numeric(lat, errors="coerce"),
             "lon": pd.to_numeric(lon, errors="coerce"),
@@ -64,15 +72,15 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
 
     df = pd.DataFrame(rows)
 
-    # Plusieurs lignes possibles par équipe -> priorise (coords dispo) puis (capacity max)
+    # Si plusieurs entrées par équipe : priorise coords puis capacité
     if not df.empty:
         df["_has_coords"] = df["lat"].notna() & df["lon"].notna()
         df["_cap_rank"]   = df["capacity"].fillna(-1)
         df = df.sort_values(["team_key","_has_coords","_cap_rank"], ascending=[True, False, False])
-        df = df.drop_duplicates(subset="team_key", keep="first")
+        df = df.drop_duplicates("team_key", keep="first")
         df = df.drop(columns=["_has_coords","_cap_rank"], errors="ignore")
 
-    # Overrides manuels (optionnels)
+    # overrides manuels (optionnels)
     ov_path = Path("data/reference/arenas_overrides.csv")
     if ov_path.exists():
         ov = pd.read_csv(ov_path)
@@ -96,12 +104,15 @@ def clean_2021() -> Path:
         for c in ("arena","lat","lon","capacity"):
             df[c] = None
 
-    cols = [
-        "date","season","home_team","away_team",
-        "home_pts","away_pts","home_diff",
-        "arena","lat","lon","capacity"
-    ]
-    df_out = df[cols].copy()
+cols = [
+    "date","season",
+    "home_team","away_team",
+    "home_pts","away_pts","home_diff",
+    "arena","lat","lon","capacity",
+    "team_key",   # <-- pour debug/jointures
+]
+df_out = df[cols].copy()
+
 
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(CLEAN_2021, index=False)
