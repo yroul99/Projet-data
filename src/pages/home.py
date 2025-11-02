@@ -50,6 +50,10 @@ def register_callbacks(app):
                   .groupby(["arena", "lat", "lon", "capacity"], as_index=False)[metric]
                   .mean()
             )
+
+            # Couleurs centrées si résiduel
+            midpoint = 0.0 if metric == "residual_margin" else gm[metric].mean()
+
             fig_map = px.scatter_geo(
                 gm,
                 lat="lat",
@@ -57,14 +61,21 @@ def register_callbacks(app):
                 hover_name="arena",
                 color=metric,
                 size="capacity",
+                size_max=40,
                 color_continuous_scale="RdBu",
+                color_continuous_midpoint=midpoint,
                 title=f"Carte — moyenne {metric} par arène",
             )
             fig_map.update_geos(showcountries=True, showcoastlines=True, fitbounds="locations")
+            fig_map.update_traces(
+                hovertemplate="<b>%{hovertext}</b><br>" +
+                              f"{metric}: %{color:.2f}<br>" +
+                              "Capacité: %{marker.size}<extra></extra>"
+            )
         else:
             fig_map = px.scatter_geo(title="Carte indisponible (colonnes lat/lon manquantes)")
 
-        # --- Histogramme (variable numérique non catégorielle) ---
+        # --- Histogramme ---
         series = df[metric].dropna()
         fig_hist = px.histogram(series, nbins=30, title=f"Histogramme — {metric}")
         fig_hist.update_xaxes(title=metric)
