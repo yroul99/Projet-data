@@ -1,15 +1,20 @@
+# src/utils/clean_data.py
 from __future__ import annotations
 import json, re
 from pathlib import Path
 import pandas as pd
-from config import RAW_GAMES, CLEAN_2021, CLEAN_FILE, SEASON, RAW_ARENAS
+
+from config import (
+    RAW_GAMES, CLEAN_2021, CLEAN_FILE, SEASON,
+    RAW_ARENAS, RAW_ELEV
+)
 from src.utils.elo import run_elo, fit_expected_margin_and_residual
 
 
 # ---------- Helpers ----------
 def _normalize(s: str) -> str:
-    """Normalise une chaîne en clé (minuscule, alphanum + espaces)."""
     return re.sub(r"[^a-z0-9 ]", "", str(s).lower())
+
 
 # ---------- Lecture matchs ----------
 def _read_games_df(p: Path) -> pd.DataFrame:
@@ -32,26 +37,18 @@ def _read_games_df(p: Path) -> pd.DataFrame:
 
     df["date"] = pd.to_datetime(df["date"]).dt.date
     df["home_diff"] = df["home_pts"] - df["away_pts"]
-
-    # clé pour joindre l'arène du domicile
     df["team_key"] = df["home_team"].map(_normalize)
 
-    # Saison + dédup
     df = df[df["season"] == SEASON]
     df = df.drop_duplicates(subset="id", keep="first")
     return df
 
+
 # ---------- Lecture arènes (JSON Wikidata) ----------
 def _read_arenas_json(p: Path) -> pd.DataFrame:
-    """
-    Lit le JSON SPARQL (Wikidata) et renvoie:
-      team_key, arena, lat, lon, capacity
-    Gère quelques alias d'équipes.
-    """
     raw = json.loads(p.read_text())
     bindings = (raw.get("results") or {}).get("bindings") or []
 
-    # alias pour harmoniser avec balldontlie (et quelques anciennes dénominations)
     synonyms = {
         "la clippers": "los angeles clippers",
         "la lakers": "los angeles lakers",
@@ -66,13 +63,13 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
             return None if x is None else x.get("value")
 
         team = val("teamLabel")
+        if team is None:
+            continue
+
         arena = val("arenaLabel")
         cap = val("capacity")
         lat = val("lat")
         lon = val("lon")
-
-        if team is None:
-            continue
 
         tk = _normalize(team)
         tk = _normalize(synonyms.get(tk, tk))
@@ -86,12 +83,11 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
         })
 
     if not rows:
-        # retourne un DF vide mais au bon schéma
         return pd.DataFrame(columns=["team_key", "arena", "lat", "lon", "capacity"])
 
     df = pd.DataFrame(rows)
 
-    # Si plusieurs entrées par équipe : priorise coords puis capacité
+    # Choix d'une ligne par équipe : priorité aux coords puis à la capacité
     df["_has_coords"] = df["lat"].notna() & df["lon"].notna()
     df["_cap_rank"] = df["capacity"].fillna(-1)
     df = df.sort_values(["team_key", "_has_coords", "_cap_rank"],
@@ -99,7 +95,7 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
     df = df.drop_duplicates(subset="team_key", keep="first")
     df = df.drop(columns=["_has_coords", "_cap_rank"], errors="ignore")
 
-    # Overrides manuels (optionnels)
+    # Overrides optionnels
     ov_path = Path("data/reference/arenas_overrides.csv")
     if ov_path.exists():
         ov = pd.read_csv(ov_path)
@@ -113,34 +109,94 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
 
     return df[["team_key", "arena", "lat", "lon", "capacity"]]
 
-# ---------- Clean principal ----------
+
+# ---------- Altitude (Open-Elevation, cache JSON) ----------
+def _attach_altitude(df_arenas: pd.DataFrame) -> pd.DataFrame:
+    if df_arenas is None or df_arenas.empty or not {"lat", "lon"}.issubset(df_arenas.columns):
+        return df_arenas
+
+    if not RAW_ELEV.exists():
+        coords = (df_arenas[["lat", "lon"]]
+                  .dropna().drop_duplicates().itertuples(index=False, name=None))
+        from src.utils.get_data import fetch_open_elevation
+        fetch_open_elevation(list(coords), force=False)
+
+    elev = pd.DataFrame(json.loads(RAW_ELEV.read_text()))
+    if elev.empty:
+        return df_arenas
+    elev = elev.rename(columns={"latitude": "lat", "longitude": "lon", "elevation": "elev_m"})
+    return df_arenas.merge(elev, on=["lat", "lon"], how="left")
+
+
+# ---------- Repos / B2B ----------
+def _rest_features(df: pd.DataFrame) -> pd.DataFrame:
+    d = df.copy()
+    d["date"] = pd.to_datetime(d["date"])
+
+    long = pd.concat([
+        d[["date", "home_team"]].rename(columns={"home_team": "team"}),
+        d[["date", "away_team"]].rename(columns={"away_team": "team"})
+    ], ignore_index=True).sort_values(["team", "date"])
+
+    long["prev_date"] = long.groupby("team")["date"].shift(1)
+    long["rest_days"] = (long["date"] - long["prev_date"]).dt.days
+
+    home_rest = long.rename(columns={"team": "home_team",
+                                     "rest_days": "home_rest_days"})[["home_team", "date", "home_rest_days"]]
+    away_rest = long.rename(columns={"team": "away_team",
+                                     "rest_days": "away_rest_days"})[["away_team", "date", "away_rest_days"]]
+
+    d = d.merge(home_rest, on=["home_team", "date"], how="left")
+    d = d.merge(away_rest, on=["away_team", "date"], how="left")
+
+    d["home_b2b"] = (d["home_rest_days"] <= 1).fillna(False)
+    d["away_b2b"] = (d["away_rest_days"] <= 1).fillna(False)
+    d["rest_delta"] = d["home_rest_days"].fillna(3) - d["away_rest_days"].fillna(3)
+    return d
+
+
+# ---------- Pipeline principal ----------
 def clean_2021() -> Path:
     df = _read_games_df(RAW_GAMES)
 
-    # Arènes (Wikidata JSON) -> join via team_key
+    # Arènes + altitude
+    arenas = None
     if RAW_ARENAS.exists():
-        arenas = _read_arenas_json(RAW_ARENAS)  # assure-toi que cette fonction existe
+        arenas = _read_arenas_json(RAW_ARENAS)
+        arenas = _attach_altitude(arenas)  # ajoute 'elev_m' si possible
+
+        # merge sur la clé d'équipe domicile
         df = df.merge(arenas, on="team_key", how="left")
     else:
         for c in ("arena", "lat", "lon", "capacity"):
             df[c] = None
 
-    # Schéma de sortie + features Elo
-    cols = [
-        "date","season",
-        "home_team","away_team",
-        "home_pts","away_pts","home_diff",
-        "arena","lat","lon","capacity",
-        "team_key",
-    ]
-    df_out = df[cols].copy()
+    # Repos / B2B
+    df = _rest_features(df)
 
-    # --- Elo (terrain neutre) + attendu + résiduel AVANT d'écrire ---
-    df_out = run_elo(df_out, k=20, use_mov=True, start_rating=1500.0)
-    df_out, alpha, b0 = fit_expected_margin_and_residual(df_out)
+    # Elo + marge attendue (neutre) + résiduel
+    df = run_elo(df, k=20, use_mov=True, start_rating=1500.0)
+    df, alpha, b0 = fit_expected_margin_and_residual(df)
     print(f"[ELO] alpha ≈ {alpha:.3f} | intercept b0 ≈ {b0:.3f}")
 
-    # Écriture CSV (enrichi)
+    # Schéma final (inclut les nouvelles colonnes)
+    final_cols = [
+        "date", "season",
+        "home_team", "away_team",
+        "home_pts", "away_pts", "home_diff",
+        "arena", "lat", "lon", "capacity",
+        "elev_m",
+        "home_rest_days", "away_rest_days", "home_b2b", "away_b2b", "rest_delta",
+        "elo_home_pre", "elo_away_pre", "elo_delta_pre", "elo_exp_home_win",
+        "expected_margin_neutral", "residual_margin",
+    ]
+    for c in final_cols:
+        if c not in df.columns:
+            df[c] = pd.NA
+
+    df_out = df[final_cols].copy()
+
+    # Écriture
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(CLEAN_2021, index=False)
     CLEAN_FILE.write_text(CLEAN_2021.read_text())
@@ -148,7 +204,3 @@ def clean_2021() -> Path:
     coords_ok = df_out[["lat", "lon"]].dropna().shape[0]
     print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
     return CLEAN_2021
-
-    
-
-
