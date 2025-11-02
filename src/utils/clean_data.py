@@ -94,20 +94,36 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
 
 # ---------- Altitude (Open-Elevation, cache JSON) ----------
 def _attach_altitude(df_arenas: pd.DataFrame) -> pd.DataFrame:
-    if df_arenas is None or df_arenas.empty or not {"lat", "lon"}.issubset(df_arenas.columns):
+    """
+    Ajoute la colonne elev_m en joignant sur lat/lon avec arrondi pour éviter
+    les ratés d'égalité flottante.
+    """
+    if df_arenas is None or df_arenas.empty or not {"lat","lon"}.issubset(df_arenas.columns):
         return df_arenas
 
+    # Assure-toi d'avoir un cache; sinon on le crée avec toutes les coords
     if not RAW_ELEV.exists():
-        coords = (df_arenas[["lat", "lon"]]
+        coords = (df_arenas[["lat","lon"]]
                   .dropna().drop_duplicates().itertuples(index=False, name=None))
         from src.utils.get_data import fetch_open_elevation
         fetch_open_elevation(list(coords), force=False)
 
+    # Charge le cache
     elev = pd.DataFrame(json.loads(RAW_ELEV.read_text()))
     if elev.empty:
         return df_arenas
-    elev = elev.rename(columns={"latitude": "lat", "longitude": "lon", "elevation": "elev_m"})
-    return df_arenas.merge(elev, on=["lat", "lon"], how="left")
+
+    # Arrondis cohérents des 2 côtés
+    df = df_arenas.copy()
+    df["lat_r"]  = df["lat"].astype(float).round(5)
+    df["lon_r"]  = df["lon"].astype(float).round(5)
+
+    elev["lat_r"] = elev["latitude"].astype(float).round(5)
+    elev["lon_r"] = elev["longitude"].astype(float).round(5)
+    elev = elev.rename(columns={"elevation": "elev_m"})
+
+    out = df.merge(elev[["lat_r","lon_r","elev_m"]], on=["lat_r","lon_r"], how="left")
+    return out.drop(columns=["lat_r","lon_r"])
 
 
 # ---------- Repos / B2B ----------

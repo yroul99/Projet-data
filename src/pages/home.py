@@ -98,4 +98,15 @@ def register_callbacks(app):
             fig_hist.update_xaxes(range=[-vhist, vhist])
         fig_hist.update_layout(xaxis_title=metric, yaxis_title="Fréquence")
 
-        return fig_map, fig_hist
+            # --- Nuage résiduel vs altitude (toujours sur residual_margin pour le sens) ---
+        y = "residual_margin" if "residual_margin" in df.columns else "home_diff"
+        scat = px.scatter(
+            df.dropna(subset=["elev_m", y]),
+            x="elev_m", y=y,
+            trendline="ols",  # nécessite statsmodels (déjà utilisé par tes scripts)
+            title="Résiduel (Elo) vs Altitude (m)" if y=="residual_margin" else "Home diff vs Altitude (m)",
+            opacity=0.5
+        )
+        scat.update_layout(xaxis_title="Altitude (m)", yaxis_title=y)
+        return fig_map, fig_hist, scat
+
