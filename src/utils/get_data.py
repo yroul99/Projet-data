@@ -1,11 +1,14 @@
+# src/utils/get_data.py
 from __future__ import annotations
-import json, time, os
+import json, time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Dict, Any, List, Tuple
 import requests
+
 from config import (
-    ENDPOINTS, RAW_GAMES, RAW_TEAMS, RAW_ARENAS, RAW_ELEV, SEASON, BALLDONTLIE_API_KEY
+    ENDPOINTS, RAW_GAMES, RAW_TEAMS, RAW_ARENAS, RAW_ELEV,
+    SEASON, BALLDONTLIE_API_KEY
 )
 
 UA = {"User-Agent": "esiee-projet-data/1.0"}
@@ -19,26 +22,26 @@ def _save_json(path: Path, data) -> None:
 def _auth_headers() -> Dict[str, str]:
     h = UA.copy()
     if BALLDONTLIE_API_KEY:
-        # balldontlie attend la clé brute (pas "Bearer ...")
+        # balldontlie expects the raw key, not "Bearer ..."
         h["Authorization"] = BALLDONTLIE_API_KEY
     return h
 
 def _get_with_backoff(url: str, *, params: Dict[str, Any], headers: Dict[str, str], retries: int = 6):
-    """GET avec backoff (gère 429 via Retry-After s’il est présent)."""
+    """GET with exponential backoff; handles HTTP 429 via Retry-After if present."""
     delay = 1.0
-    for attempt in range(retries):
+    for _ in range(retries):
         r = requests.get(url, params=params, headers=headers, timeout=60)
         if r.status_code == 429:
             ra = r.headers.get("Retry-After")
             wait_s = int(ra) + 1 if ra and ra.isdigit() else max(2, int(delay))
             time.sleep(wait_s)
-            delay = min(delay * 2, 30)  # expo backoff plafonné
+            delay = min(delay * 2, 30)
             continue
         r.raise_for_status()
         return r
     raise RuntimeError(f"Too many 429 responses on {url} with {params}")
 
-# ---------- BALLDONTLIE (équipes) ----------
+# ---------- balldontlie (teams) ----------
 def fetch_balldontlie_teams(force: bool = False) -> Path:
     if _fresh_enough(RAW_TEAMS) and not force:
         return RAW_TEAMS
@@ -46,19 +49,17 @@ def fetch_balldontlie_teams(force: bool = False) -> Path:
     _save_json(RAW_TEAMS, r.json())
     return RAW_TEAMS
 
-# ---------- BALLDONTLIE (matchs régulière 2021-22, pagination par CURSEUR) ----------
+# ---------- balldontlie (regular season 2021-22 with cursor pagination) ----------
 def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) -> Path:
     """
-    NBA 2021-22 (saison régulière) avec fenêtres mensuelles + pagination CURSEUR.
-    - Reprend sur un RAW partiel
-    - Dédup par id
-    - Snapshot après chaque page
+    NBA 2021-22 (regular season) monthly windows + cursor pagination.
+    Resumes from existing RAW, dedups by id, snapshots after each page.
     """
     RAW_GAMES.parent.mkdir(parents=True, exist_ok=True)
     url = ENDPOINTS["bl_games"]
     headers = _auth_headers()
 
-    # Reprise si RAW existant
+    # Resume from existing file if any
     all_games, seen = [], set()
     if RAW_GAMES.exists():
         try:
@@ -119,17 +120,18 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
             if not data or not cursor:
                 break
 
-            time.sleep(0.4)  # throttle doux
+            time.sleep(0.4)
 
     _save_json(RAW_GAMES, all_games)
     print(f"[done] total RAW = {len(all_games)}")
     return RAW_GAMES
 
-# ---------- WIKIDATA (arènes NBA) ----------
+# ---------- Wikidata (NBA arenas) ----------
 def fetch_wikidata_arenas(force: bool = False) -> Path:
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
-    url = ENDPOINTS["wd_sparql"]
+    RAW_ARENAS.parent.mkdir(parents=True, exist_ok=True)
+
     query = """
     SELECT ?team ?teamLabel ?arena ?arenaLabel ?lat ?lon ?capacity WHERE {
       ?team wdt:P118 wd:Q155223;    # NBA
@@ -138,12 +140,12 @@ def fetch_wikidata_arenas(force: bool = False) -> Path:
       ?coordStmt psv:P625 ?coordNode.
       ?coordNode wikibase:geoLatitude ?lat ;
                  wikibase:geoLongitude ?lon .
-      OPTIONAL { ?arena wdt:P1083 ?capacity. }  # capacity if present
+      OPTIONAL { ?arena wdt:P1083 ?capacity. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
     }
     """
     r = requests.get(
-        url,
+        ENDPOINTS["wd_sparql"],
         params={"format": "json", "query": query},
         headers=UA,
         timeout=60,
@@ -152,23 +154,11 @@ def fetch_wikidata_arenas(force: bool = False) -> Path:
     _save_json(RAW_ARENAS, r.json())
     return RAW_ARENAS
 
-# ---------- Agrégateur ----------
-def get_raw(force: bool = False) -> dict[str, Path]:
-    paths = {}
-    paths["teams"]  = fetch_balldontlie_teams(force=force)
-    paths["games"]  = fetch_balldontlie_games_2021(force=force, postseason=False)
-    try:
-        paths["arenas"] = fetch_wikidata_arenas(force=force)
-    except Exception as e:
-        print("[WARN] wikidata fetch failed:", e)
-    return paths
-
-
-
-def fetch_open_elevation(coords: list[tuple[float,float]], force: bool=False) -> Path:
+# ---------- Open-Elevation ----------
+def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False) -> Path:
     """
-    Récupère les altitudes pour une liste (lat, lon).
-    Met en cache dans RAW_ELEV (liste de dicts: latitude, longitude, elevation).
+    Fetch elevations for list of (lat, lon); cache in RAW_ELEV as list of dicts:
+    [{latitude, longitude, elevation}, ...]
     """
     RAW_ELEV.parent.mkdir(parents=True, exist_ok=True)
 
@@ -178,12 +168,12 @@ def fetch_open_elevation(coords: list[tuple[float,float]], force: bool=False) ->
             existing = json.loads(RAW_ELEV.read_text())
         except Exception:
             existing = []
-    have = {(round(e["latitude"],6), round(e["longitude"],6)) for e in existing}
+    have = {(round(e["latitude"], 6), round(e["longitude"], 6)) for e in existing if all(k in e for k in ("latitude","longitude"))}
 
-    # normalise et déduplique les nouvelles coordonnées
+    # normalize & dedupe
     todo = []
     for lat, lon in coords:
-        key = (round(float(lat),6), round(float(lon),6))
+        key = (round(float(lat), 6), round(float(lon), 6))
         if key not in have:
             todo.append({"latitude": key[0], "longitude": key[1]})
 
@@ -192,16 +182,23 @@ def fetch_open_elevation(coords: list[tuple[float,float]], force: bool=False) ->
 
     url = ENDPOINTS["open_elevation"]
     out = existing[:]
-    # l’API accepte ~100 points par requête — on segmente proprement
     for i in range(0, len(todo), 100):
         chunk = {"locations": todo[i:i+100]}
         r = requests.post(url, json=chunk, timeout=60)
         r.raise_for_status()
-        res = r.json().get("results", [])
-        out.extend(res)
-        time.sleep(0.2)  # petit throttle
+        out.extend(r.json().get("results", []))
+        time.sleep(0.2)
 
     RAW_ELEV.write_text(json.dumps(out, ensure_ascii=False))
     return RAW_ELEV
 
-
+# ---------- Aggregator ----------
+def get_raw(force: bool = False) -> dict[str, Path]:
+    paths = {}
+    paths["teams"]  = fetch_balldontlie_teams(force=force)
+    paths["games"]  = fetch_balldontlie_games_2021(force=force, postseason=False)
+    try:
+        paths["arenas"] = fetch_wikidata_arenas(force=force)
+    except Exception as e:
+        print("[WARN] wikidata fetch failed:", e)
+    return paths
