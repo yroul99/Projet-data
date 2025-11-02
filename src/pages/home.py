@@ -74,11 +74,18 @@ def register_callbacks(app):
             )
         else:
             fig_map = px.scatter_geo(title="Carte indisponible (colonnes lat/lon manquantes)")
+            v = gm[metric].abs().quantile(0.95)
+            fig_map.update_coloraxes(cmid=0, cmin=-v, cmax=v)  # palette symétrique autour de 0
+            hover_data={"capacity": True, metric: ':.2f'}
+            size_max=40
+
+
 
         # --- Histogramme ---
         series = df[metric].dropna()
         fig_hist = px.histogram(series, nbins=30, title=f"Histogramme — {metric}")
         fig_hist.update_xaxes(title=metric)
         fig_hist.update_yaxes(title="fréquence")
+        fig_hist.update_layout(xaxis_title=metric, yaxis_title="Fréquence")
 
         return fig_map, fig_hist
