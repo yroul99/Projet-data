@@ -1,13 +1,15 @@
-from __future__ import annotations
-from dash import Dash, html
-from config import CLEAN_FILE, DATA_CLEAN
-from src.pages.home import layout
-
-# S'assure que le dossier cleaned existe
-DATA_CLEAN.mkdir(parents=True, exist_ok=True)
+# main.py
+from dash import Dash
+from src.pages.home import layout, register_callbacks
 
 app = Dash(__name__)
-app.layout = html.Div([ layout() ])
+app.title = "NBA 2021-22 — Avantage du terrain"
+
+# NE PAS appeler layout() : c'est un objet, pas une fonction
+app.layout = layout
+
+# callbacks
+register_callbacks(app)
 
 if __name__ == "__main__":
-    app.run(debug=False, host="0.0.0.0", port=8050)
+    app.run_server(host="0.0.0.0", port=8050, debug=False)
