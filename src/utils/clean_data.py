@@ -137,10 +137,8 @@ def clean_2021() -> Path:
 
     # --- Elo (terrain neutre) + attendu + résiduel AVANT d'écrire ---
     df_out = run_elo(df_out, k=20, use_mov=True, start_rating=1500.0)
-    df_out, alpha = fit_expected_margin_and_residual(df_out)
-    df_out["expected_margin_neutral"] = df_out["expected_margin_neutral"].round(2)
-    df_out["residual_margin"] = df_out["residual_margin"].round(2)
-    print(f"[ELO] alpha ≈ {alpha:.3f}")
+    df_out, alpha, b0 = fit_expected_margin_and_residual(df_out)
+    print(f"[ELO] alpha ≈ {alpha:.3f} | intercept b0 ≈ {b0:.3f}")
 
     # Écriture CSV (enrichi)
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
