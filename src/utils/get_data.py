@@ -74,8 +74,7 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
             print(f"[resume] RAW existant : {len(all_games)} matchs chargés")
         except Exception:
             pass
-    elif not force and RAW_GAMES.exists():
-        return RAW_GAMES
+
 
     windows = [
         ("2021-10-01", "2021-11-01"),
@@ -126,31 +125,35 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     print(f"[done] total RAW = {len(all_games)}")
     return RAW_GAMES
 
-# ---------- Wikidata (NBA arenas) ----------
-from config import ENDPOINTS, RAW_ARENAS  # assure-toi d'importer RAW_ARENAS
+# --- WIKIDATA (arènes NBA) en JSON ---
 
-def fetch_wikidata_arenas(force: bool=False) -> Path:
-    """Arènes NBA: coord (P625), capacité (P1083), tenant (P466) → CSV brut."""
+def fetch_wikidata_arenas(force: bool = False) -> Path:
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
-    q = """
-    SELECT ?arena ?arenaLabel ?teamLabel ?capacity ?coord WHERE {
-      ?team wdt:P118 wd:Q155223 .   # league = NBA
-      ?arena wdt:P466 ?team .       # tenant (occupant)
-      OPTIONAL { ?arena wdt:P1083 ?capacity }
-      OPTIONAL { ?arena wdt:P625  ?coord }
+
+    query = """
+    SELECT ?team ?teamLabel ?arena ?arenaLabel ?lat ?lon ?capacity WHERE {
+      ?team wdt:P118 wd:Q155223; wdt:P115 ?arena.
+      ?arena p:P625 ?coordStmt.
+      ?coordStmt psv:P625 ?coordNode.
+      ?coordNode wikibase:geoLatitude ?lat ;
+                 wikibase:geoLongitude ?lon .
+      OPTIONAL { ?arena wdt:P1083 ?capacity. }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
     }
     """
     r = requests.get(
         ENDPOINTS["wd_sparql"],
-        params={"format": "csv", "query": q},
-        headers={"User-Agent": "esiee-projet-data/1.0"},
-        timeout=60
+        params={"format": "json", "query": query},
+        headers=UA,
+        timeout=60,
     )
     r.raise_for_status()
-    RAW_ARENAS.write_bytes(r.content)  # RAW inchangé
+    RAW_ARENAS.parent.mkdir(parents=True, exist_ok=True)   # <-- AJOUT
+    RAW_ARENAS.write_text(json.dumps(r.json(), ensure_ascii=False))
     return RAW_ARENAS
+
+
 
 
 # ---------- Open-Elevation ----------

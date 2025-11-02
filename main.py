@@ -3,7 +3,8 @@ from dash import Dash, html
 from src.pages.home import layout, register_callbacks
 
 app = Dash(__name__)
-app.layout = html.Div([layout])  # <-- 'layout' est un composant, on ne l'appelle pas
+# layout est déjà un composant (pas une fonction) -> on ne l'appelle pas
+app.layout = html.Div([layout])
 
 register_callbacks(app)
 
