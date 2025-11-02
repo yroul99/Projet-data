@@ -8,17 +8,6 @@ from config import (
     ENDPOINTS, RAW_GAMES, RAW_TEAMS, RAW_ARENAS, RAW_ELEV, SEASON, BALLDONTLIE_API_KEY
 )
 
-
-
-from config import (
-    ENDPOINTS,
-    RAW_GAMES,
-    RAW_TEAMS,
-    RAW_ARENAS,   # <-- AJOUT
-    SEASON,
-    BALLDONTLIE_API_KEY
-)
-
 UA = {"User-Agent": "esiee-projet-data/1.0"}
 
 def _fresh_enough(path: Path, hours: int = 24) -> bool:
