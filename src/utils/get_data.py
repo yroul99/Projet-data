@@ -4,6 +4,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, Any
 import requests
+from config import RAW_ELEV
 
 from config import (
     ENDPOINTS,
@@ -188,3 +189,22 @@ def get_raw(force: bool = False) -> dict[str, Path]:
     except Exception as e:
         print("[WARN] wikidata fetch failed:", e)
     return paths
+# config.py
+RAW_ELEV = DATA_RAW / "arenas_elevation.json"
+
+def fetch_open_elevation(coords: list[tuple[float,float]], force=False):
+    """coords = [(lat,lon), ...] → enregistre JSON brut dans RAW_ELEV"""
+    if RAW_ELEV.exists() and not force:
+        return RAW_ELEV
+    # batch raisonnables (100 points max)
+    out = []
+    for i in range(0, len(coords), 80):
+        batch = [{"latitude": lat, "longitude": lon} for lat,lon in coords[i:i+80]]
+        r = requests.post("https://api.open-elevation.com/api/v1/lookup",
+                          json={"locations": batch}, timeout=60)
+        r.raise_for_status()
+        out.extend(r.json().get("results", []))
+        time.sleep(0.6)  # douceur API
+    RAW_ELEV.write_text(json.dumps(out, ensure_ascii=False))
+    return RAW_ELEV
+
