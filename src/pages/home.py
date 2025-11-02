@@ -1,10 +1,8 @@
 # src/pages/home.py
 from __future__ import annotations
-from pathlib import Path
 import pandas as pd
 import plotly.express as px
 from dash import html, dcc, Output, Input
-
 from config import CLEAN_FILE
 
 def load_df() -> pd.DataFrame:
@@ -14,8 +12,8 @@ def load_df() -> pd.DataFrame:
     return df
 
 METRIC_OPTIONS = [
-    {"label": "Marge à domicile (brute)",            "value": "home_diff"},
-    {"label": "Marge résiduelle (ajustée Elo)",      "value": "residual_margin"},
+    {"label": "Marge à domicile (brute)",       "value": "home_diff"},
+    {"label": "Marge résiduelle (ajustée Elo)", "value": "residual_margin"},
 ]
 
 layout = html.Div(
@@ -43,49 +41,34 @@ def register_callbacks(app):
     def _update(metric: str):
         df = load_df()
 
-        # --- Carte (agrégation par arène) ---
+        # -------- Carte (agrégation par arène) --------
         if {"arena", "lat", "lon"}.issubset(df.columns):
             gm = (
                 df.dropna(subset=["lat", "lon"])
                   .groupby(["arena", "lat", "lon", "capacity"], as_index=False)[metric]
                   .mean()
             )
-
-            # Couleurs centrées si résiduel
-            midpoint = 0.0 if metric == "residual_margin" else gm[metric].mean()
-
             fig_map = px.scatter_geo(
                 gm,
-                lat="lat",
-                lon="lon",
+                lat="lat", lon="lon",
                 hover_name="arena",
                 color=metric,
-                size="capacity",
-                size_max=40,
+                size="capacity", size_max=40,
                 color_continuous_scale="RdBu",
-                color_continuous_midpoint=midpoint,
                 title=f"Carte — moyenne {metric} par arène",
+                hover_data={"capacity": True, metric:":.2f"},
             )
             fig_map.update_geos(showcountries=True, showcoastlines=True, fitbounds="locations")
-            fig_map.update_traces(
-                hovertemplate="<b>%{hovertext}</b><br>" +
-                              f"{metric}: %{color:.2f}<br>" +
-                              "Capacité: %{marker.size}<extra></extra>"
-            )
+
+            # Palette symétrique autour de 0 pour le résiduel
+            if metric == "residual_margin":
+                v = gm[metric].abs().quantile(0.95)
+                fig_map.update_coloraxes(cmid=0, cmin=-v, cmax=v)
         else:
             fig_map = px.scatter_geo(title="Carte indisponible (colonnes lat/lon manquantes)")
-            v = gm[metric].abs().quantile(0.95)
-            fig_map.update_coloraxes(cmid=0, cmin=-v, cmax=v)  # palette symétrique autour de 0
-            hover_data={"capacity": True, metric: ':.2f'}
-            size_max=40
 
-
-
-        # --- Histogramme ---
-        series = df[metric].dropna()
-        fig_hist = px.histogram(series, nbins=30, title=f"Histogramme — {metric}")
-        fig_hist.update_xaxes(title=metric)
-        fig_hist.update_yaxes(title="fréquence")
+        # -------- Histogramme --------
+        fig_hist = px.histogram(df, x=metric, nbins=30, title=f"Histogramme — {metric}")
         fig_hist.update_layout(xaxis_title=metric, yaxis_title="Fréquence")
 
         return fig_map, fig_hist
