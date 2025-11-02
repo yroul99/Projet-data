@@ -1,4 +1,3 @@
-# src/utils/elo.py
 from __future__ import annotations
 import pandas as pd
 from typing import Dict, Tuple
@@ -7,25 +6,18 @@ START_ELO = 1500.0
 DEFAULT_K = 20
 
 def _expected_from_delta(delta: float) -> float:
-    """Proba de victoire du home à terrain neutre (logistique base 10, SANS bonus domicile)."""
+    # proba de victoire du home à terrain neutre (SANS bonus domicile)
     return 1.0 / (1.0 + 10.0 ** (-delta / 400.0))
 
 def _mov_multiplier(mov: float, delta: float) -> float:
-    """
-    Multiplicateur marge de victoire (style 538).
-    mov: margin of victory (valeur absolue)
-    delta: écart Elo pré-match (home - away), valeur absolue
-    """
-    return ((mov + 3.0) ** 0.8) / (7.5 + 0.006 * abs(delta))
+    # multiplicateur marge de victoire (style 538)
+    return ((abs(mov) + 3.0) ** 0.8) / (7.5 + 0.006 * abs(delta))
 
 def run_elo(df_games: pd.DataFrame, k: int = DEFAULT_K, use_mov: bool = True,
             start_rating: float = START_ELO) -> pd.DataFrame:
     """
-    Entrée df trié par date avec colonnes:
-      ['date','home_team','away_team','home_pts','away_pts']
-    Retourne df avec colonnes ajoutées:
-      ['elo_home_pre','elo_away_pre','elo_delta_pre','elo_exp_home_win']
-    et met à jour itérativement les ratings par équipe.
+    df_games doit contenir: ['date','home_team','away_team','home_pts','away_pts']
+    Ajoute: ['elo_home_pre','elo_away_pre','elo_delta_pre','elo_exp_home_win']
     """
     df = df_games.sort_values("date").copy()
     ratings: Dict[str, float] = {}
@@ -36,24 +28,16 @@ def run_elo(df_games: pd.DataFrame, k: int = DEFAULT_K, use_mov: bool = True,
         rh = ratings.get(h, start_rating)
         ra = ratings.get(a, start_rating)
 
-        delta = rh - ra  # terrain neutre
+        delta = rh - ra
         p_home = _expected_from_delta(delta)
 
-        # stocke les valeurs pré-match
         elo_home_pre.append(rh)
         elo_away_pre.append(ra)
         elo_delta_pre.append(delta)
         elo_exp.append(p_home)
 
-        # résultat (1 si home gagne, 0 sinon)
         s_home = 1.0 if row["home_pts"] > row["away_pts"] else 0.0
-
-        # facteur de mise à jour
-        mult = 1.0
-        if use_mov:
-            mov = abs(row["home_pts"] - row["away_pts"])
-            mult = _mov_multiplier(mov, delta)
-
+        mult = _mov_multiplier(row["home_pts"] - row["away_pts"], delta) if use_mov else 1.0
         change = k * mult * (s_home - p_home)
         ratings[h] = rh + change
         ratings[a] = ra - change
@@ -66,9 +50,8 @@ def run_elo(df_games: pd.DataFrame, k: int = DEFAULT_K, use_mov: bool = True,
 
 def fit_expected_margin_and_residual(df_with_elo: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
     """
-    Apprend la pente alpha qui relie la marge au delta Elo (attendu neutre):
-        expected_margin_neutral = alpha * elo_delta_pre
-        residual_margin = (home_pts - away_pts) - expected_margin_neutral
+    Apprend alpha tel que: expected_margin_neutral = alpha * elo_delta_pre
+    residual_margin = (home_pts - away_pts) - expected_margin_neutral
     """
     df = df_with_elo.copy()
     x = df["elo_delta_pre"]
