@@ -4,7 +4,8 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, Any
 import requests
-from config import RAW_ELEV
+from config import ENDPOINTS, RAW_ELEV
+
 
 from config import (
     ENDPOINTS,
@@ -192,19 +193,44 @@ def get_raw(force: bool = False) -> dict[str, Path]:
 # config.py
 RAW_ELEV = DATA_RAW / "arenas_elevation.json"
 
-def fetch_open_elevation(coords: list[tuple[float,float]], force=False):
-    """coords = [(lat,lon), ...] → enregistre JSON brut dans RAW_ELEV"""
+
+def fetch_open_elevation(coords: list[tuple[float,float]], force: bool=False) -> Path:
+    """
+    Récupère les altitudes pour une liste (lat, lon).
+    Met en cache dans RAW_ELEV (liste de dicts: latitude, longitude, elevation).
+    """
+    RAW_ELEV.parent.mkdir(parents=True, exist_ok=True)
+
+    existing = []
     if RAW_ELEV.exists() and not force:
+        try:
+            existing = json.loads(RAW_ELEV.read_text())
+        except Exception:
+            existing = []
+    have = {(round(e["latitude"],6), round(e["longitude"],6)) for e in existing}
+
+    # normalise et déduplique les nouvelles coordonnées
+    todo = []
+    for lat, lon in coords:
+        key = (round(float(lat),6), round(float(lon),6))
+        if key not in have:
+            todo.append({"latitude": key[0], "longitude": key[1]})
+
+    if not todo:
         return RAW_ELEV
-    # batch raisonnables (100 points max)
-    out = []
-    for i in range(0, len(coords), 80):
-        batch = [{"latitude": lat, "longitude": lon} for lat,lon in coords[i:i+80]]
-        r = requests.post("https://api.open-elevation.com/api/v1/lookup",
-                          json={"locations": batch}, timeout=60)
+
+    url = ENDPOINTS["open_elevation"]
+    out = existing[:]
+    # l’API accepte ~100 points par requête — on segmente proprement
+    for i in range(0, len(todo), 100):
+        chunk = {"locations": todo[i:i+100]}
+        r = requests.post(url, json=chunk, timeout=60)
         r.raise_for_status()
-        out.extend(r.json().get("results", []))
-        time.sleep(0.6)  # douceur API
+        res = r.json().get("results", [])
+        out.extend(res)
+        time.sleep(0.2)  # petit throttle
+
     RAW_ELEV.write_text(json.dumps(out, ensure_ascii=False))
     return RAW_ELEV
+
 
