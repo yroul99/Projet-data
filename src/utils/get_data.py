@@ -4,7 +4,10 @@ from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Optional, Dict, Any
 import requests
-from config import ENDPOINTS, RAW_ELEV
+from config import (
+    ENDPOINTS, RAW_GAMES, RAW_TEAMS, RAW_ARENAS, RAW_ELEV, SEASON, BALLDONTLIE_API_KEY
+)
+
 
 
 from config import (
@@ -190,8 +193,7 @@ def get_raw(force: bool = False) -> dict[str, Path]:
     except Exception as e:
         print("[WARN] wikidata fetch failed:", e)
     return paths
-# config.py
-RAW_ELEV = DATA_RAW / "arenas_elevation.json"
+
 
 
 def fetch_open_elevation(coords: list[tuple[float,float]], force: bool=False) -> Path:
