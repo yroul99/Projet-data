@@ -156,51 +156,73 @@ def _rest_features(df: pd.DataFrame) -> pd.DataFrame:
 
 
 # ---------- Pipeline principal ----------
+from config import RAW_GAMES, RAW_TEAMS, CLEAN_2021, CLEAN_FILE, SEASON, RAW_ARENAS
+import pandas as pd
+import json
+from pathlib import Path
+import re
+
+def _normalize_team(s: str) -> str:
+    return re.sub(r"[^a-z0-9 ]","", s.lower())
+
+def _read_arenas_df(p: Path) -> pd.DataFrame:
+    df = pd.read_csv(p)
+    # coord sous forme 'Point(lon lat)' → extraire
+    if "coord" in df.columns:
+        coords = df["coord"].astype(str).str.extract(r'Point\((?P<lon>-?\d+\.?\d*) (?P<lat>-?\d+\.?\d*)\)')
+        df["lat"] = pd.to_numeric(coords["lat"], errors="coerce")
+        df["lon"] = pd.to_numeric(coords["lon"], errors="coerce")
+    # normalise la clé équipe pour la jointure
+    df["team_key"] = df["teamLabel"].astype(str).map(_normalize_team)
+    # garde l’essentiel
+    keep = ["team_key", "arenaLabel", "lat", "lon", "capacity"]
+    for k in keep:
+        if k not in df.columns: df[k] = None
+    return df[keep].rename(columns={"arenaLabel":"arena"})
+
+def _read_games_df(p: Path) -> pd.DataFrame:
+    items = json.loads(p.read_text())
+    if isinstance(items, dict) and "data" in items:
+        items = items["data"]
+    df = pd.json_normalize(items)
+    keep = [
+        "id","date","season",
+        "home_team.full_name","visitor_team.full_name",
+        "home_team_score","visitor_team_score"
+    ]
+    df = df[keep].rename(columns={
+        "home_team.full_name":"home_team",
+        "visitor_team.full_name":"away_team",
+        "home_team_score":"home_pts",
+        "visitor_team_score":"away_pts",
+    })
+    df["date"] = pd.to_datetime(df["date"]).dt.date
+    df["home_diff"] = df["home_pts"] - df["away_pts"]
+    df = df[df["season"] == SEASON]
+    # clé de jointure normalisée
+    df["team_key"] = df["home_team"].astype(str).map(_normalize_team)
+    return df
+
 def clean_2021() -> Path:
     df = _read_games_df(RAW_GAMES)
 
-    # Arènes + altitude
-    arenas = None
+    # Jointure arènes si le CSV RAW existe
     if RAW_ARENAS.exists():
-        arenas = _read_arenas_json(RAW_ARENAS)
-        arenas = _attach_altitude(arenas)  # ajoute 'elev_m' si possible
-
-        # merge sur la clé d'équipe domicile
+        arenas = _read_arenas_df(RAW_ARENAS)
         df = df.merge(arenas, on="team_key", how="left")
     else:
-        for c in ("arena", "lat", "lon", "capacity"):
-            df[c] = None
+        # colonnes vides pour que l'app ne casse pas
+        for col in ["arena","lat","lon","capacity"]:
+            df[col] = None
 
-    # Repos / B2B
-    df = _rest_features(df)
+    # colonnes finales minimalement requises par l’app
+    cols = ["date","season","home_team","away_team",
+            "home_pts","away_pts","home_diff",
+            "arena","lat","lon","capacity"]
+    df_out = df[cols].copy()
 
-    # Elo + marge attendue (neutre) + résiduel
-    df = run_elo(df, k=20, use_mov=True, start_rating=1500.0)
-    df, alpha, b0 = fit_expected_margin_and_residual(df)
-    print(f"[ELO] alpha ≈ {alpha:.3f} | intercept b0 ≈ {b0:.3f}")
-
-    # Schéma final (inclut les nouvelles colonnes)
-    final_cols = [
-        "date", "season",
-        "home_team", "away_team",
-        "home_pts", "away_pts", "home_diff",
-        "arena", "lat", "lon", "capacity",
-        "elev_m",
-        "home_rest_days", "away_rest_days", "home_b2b", "away_b2b", "rest_delta",
-        "elo_home_pre", "elo_away_pre", "elo_delta_pre", "elo_exp_home_win",
-        "expected_margin_neutral", "residual_margin",
-    ]
-    for c in final_cols:
-        if c not in df.columns:
-            df[c] = pd.NA
-
-    df_out = df[final_cols].copy()
-
-    # Écriture
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(CLEAN_2021, index=False)
     CLEAN_FILE.write_text(CLEAN_2021.read_text())
-
-    coords_ok = df_out[["lat", "lon"]].dropna().shape[0]
-    print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
+    print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE}")
     return CLEAN_2021
