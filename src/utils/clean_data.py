@@ -138,3 +138,14 @@ def clean_2021() -> Path:
     coords_ok = df_out[["lat", "lon"]].dropna().shape[0]
     print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
     return CLEAN_2021
+    
+from src.utils.elo import run_elo, fit_expected_margin_and_residual
+
+# Elo pré-match à terrain neutre (K=20, avec multiplicateur MOV)
+df_out = run_elo(df_out, k=20, use_mov=True, start_rating=1500.0)
+
+# Attendu (neutre) et résiduel
+df_out, alpha = fit_expected_margin_and_residual(df_out)
+
+# (optionnel) garde trace de la pente apprise
+print(f"[ELO] alpha (points de marge par 400 Elo) ≈ {alpha:.3f}")
