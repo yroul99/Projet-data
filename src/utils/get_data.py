@@ -137,50 +137,30 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     return RAW_GAMES
 
 # ---------- WIKIDATA (arènes NBA) ----------
-def fetch_wikidata_arenas(force: bool=False) -> Path:
-    """
-    Arènes NBA 2021-22 via Wikidata (JSON) :
-    on part de l'équipe (P118 = NBA), puis on suit la déclaration P115 'home venue'
-    en filtrant par les qualifs P580/P582 pour couvrir la saison 2021-10-01 → 2022-04-30.
-    """
-    from config import ENDPOINTS, RAW_ARENAS
+def fetch_wikidata_arenas(force: bool = False) -> Path:
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
-
-    q = """
-    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-    SELECT ?team ?teamLabel ?arena ?arenaLabel ?capacity ?lat ?lon WHERE {
-      ?team wdt:P118 wd:Q155223 .          # league = NBA
-      ?team p:P115 ?venueStmt .            # déclaration 'home venue'
-      ?venueStmt ps:P115 ?arena .
-
-      OPTIONAL { ?venueStmt pq:P580 ?start . }   # start time
-      OPTIONAL { ?venueStmt pq:P582 ?end . }     # end time
-
-      # Intervalles qui couvrent la saison régulière 2021-22
-      FILTER( (!BOUND(?start) || ?start <= "2022-04-30T00:00:00Z"^^xsd:dateTime) &&
-              (!BOUND(?end)   || ?end   >= "2021-10-01T00:00:00Z"^^xsd:dateTime) )
-
-      OPTIONAL { ?arena wdt:P1083 ?capacity }  # capacity
-      OPTIONAL {
-        ?arena p:P625/psv:P625 ?coordNode .
-        ?coordNode wikibase:geoLatitude ?lat ;
-                   wikibase:geoLongitude ?lon .
-      }
+    url = ENDPOINTS["wd_sparql"]
+    query = """
+    SELECT ?team ?teamLabel ?arena ?arenaLabel ?lat ?lon ?capacity WHERE {
+      ?team wdt:P118 wd:Q155223;    # NBA
+            wdt:P115 ?arena.        # home venue
+      ?arena p:P625 ?coordStmt.
+      ?coordStmt psv:P625 ?coordNode.
+      ?coordNode wikibase:geoLatitude ?lat ;
+                 wikibase:geoLongitude ?lon .
+      OPTIONAL { ?arena wdt:P1083 ?capacity. }  # capacity if present
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
     }
     """
-    headers = {
-        "User-Agent": "esiee-projet-data/1.0",
-        "Accept": "application/sparql-results+json",
-    }
-    params = {"query": q, "format": "json"}
-    r = requests.get(ENDPOINTS["wd_sparql"], params=params, headers=headers, timeout=60)
+    r = requests.get(
+        url,
+        params={"format": "json", "query": query},
+        headers=UA,
+        timeout=60,
+    )
     r.raise_for_status()
-    ctype = r.headers.get("Content-Type","").lower()
-    if "json" not in ctype and not r.text.lstrip().startswith("{"):
-        raise RuntimeError("Wikidata n'a pas renvoyé du JSON.")
-    RAW_ARENAS.write_bytes(r.content)
+    _save_json(RAW_ARENAS, r.json())
     return RAW_ARENAS
 
 # ---------- Agrégateur ----------
