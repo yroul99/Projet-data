@@ -3,6 +3,8 @@ import json, re
 from pathlib import Path
 import pandas as pd
 from config import RAW_GAMES, CLEAN_2021, CLEAN_FILE, SEASON, RAW_ARENAS
+from src.utils.elo import run_elo, fit_expected_margin_and_residual
+
 
 # ---------- Helpers ----------
 def _normalize(s: str) -> str:
@@ -115,22 +117,32 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
 def clean_2021() -> Path:
     df = _read_games_df(RAW_GAMES)
 
+    # Arènes (Wikidata JSON) -> join via team_key
     if RAW_ARENAS.exists():
-        arenas = _read_arenas_json(RAW_ARENAS)
+        arenas = _read_arenas_json(RAW_ARENAS)  # assure-toi que cette fonction existe
         df = df.merge(arenas, on="team_key", how="left")
     else:
         for c in ("arena", "lat", "lon", "capacity"):
             df[c] = None
 
+    # Schéma de sortie + features Elo
     cols = [
-        "date", "season",
-        "home_team", "away_team",
-        "home_pts", "away_pts", "home_diff",
-        "arena", "lat", "lon", "capacity",
+        "date","season",
+        "home_team","away_team",
+        "home_pts","away_pts","home_diff",
+        "arena","lat","lon","capacity",
         "team_key",
     ]
     df_out = df[cols].copy()
 
+    # --- Elo (terrain neutre) + attendu + résiduel AVANT d'écrire ---
+    df_out = run_elo(df_out, k=20, use_mov=True, start_rating=1500.0)
+    df_out, alpha = fit_expected_margin_and_residual(df_out)
+    df_out["expected_margin_neutral"] = df_out["expected_margin_neutral"].round(2)
+    df_out["residual_margin"] = df_out["residual_margin"].round(2)
+    print(f"[ELO] alpha ≈ {alpha:.3f}")
+
+    # Écriture CSV (enrichi)
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(CLEAN_2021, index=False)
     CLEAN_FILE.write_text(CLEAN_2021.read_text())
@@ -138,14 +150,7 @@ def clean_2021() -> Path:
     coords_ok = df_out[["lat", "lon"]].dropna().shape[0]
     print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
     return CLEAN_2021
+
     
-from src.utils.elo import run_elo, fit_expected_margin_and_residual
 
-# Elo pré-match à terrain neutre (K=20, avec multiplicateur MOV)
-df_out = run_elo(df_out, k=20, use_mov=True, start_rating=1500.0)
 
-# Attendu (neutre) et résiduel
-df_out, alpha = fit_expected_margin_and_residual(df_out)
-
-# (optionnel) garde trace de la pente apprise
-print(f"[ELO] alpha (points de marge par 400 Elo) ≈ {alpha:.3f}")
