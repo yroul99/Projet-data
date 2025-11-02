@@ -48,10 +48,12 @@ def run_elo(df_games: pd.DataFrame, k: int = DEFAULT_K, use_mov: bool = True,
     df["elo_exp_home_win"] = elo_exp
     return df
 
-def fit_expected_margin_and_residual(df_with_elo: pd.DataFrame) -> Tuple[pd.DataFrame, float]:
+def fit_expected_margin_and_residual(df_with_elo: pd.DataFrame) -> Tuple[pd.DataFrame, float, float]:
     """
-    Apprend alpha tel que: expected_margin_neutral = alpha * elo_delta_pre
-    residual_margin = (home_pts - away_pts) - expected_margin_neutral
+    Apprend alpha et intercept b0 tels que:
+        expected_margin_neutral = b0 + alpha * elo_delta_pre
+        residual_margin = (home_pts - away_pts) - expected_margin_neutral
+    Retourne (df, alpha, b0)
     """
     df = df_with_elo.copy()
     x = df["elo_delta_pre"]
@@ -60,7 +62,9 @@ def fit_expected_margin_and_residual(df_with_elo: pd.DataFrame) -> Tuple[pd.Data
     var = ((x - xm) ** 2).sum()
     cov = ((x - xm) * (y - ym)).sum()
     alpha = (cov / var) if var != 0 else 0.0
+    b0 = ym - alpha * xm
 
-    df["expected_margin_neutral"] = (alpha * df["elo_delta_pre"]).round(2)
+    df["expected_margin_neutral"] = (b0 + alpha * df["elo_delta_pre"]).round(2)
     df["residual_margin"] = (y - df["expected_margin_neutral"]).round(2)
-    return df, alpha
+    return df, alpha, b0
+
