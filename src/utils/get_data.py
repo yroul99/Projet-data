@@ -127,32 +127,31 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     return RAW_GAMES
 
 # ---------- Wikidata (NBA arenas) ----------
-def fetch_wikidata_arenas(force: bool = False) -> Path:
+from config import ENDPOINTS, RAW_ARENAS  # assure-toi d'importer RAW_ARENAS
+
+def fetch_wikidata_arenas(force: bool=False) -> Path:
+    """Arènes NBA: coord (P625), capacité (P1083), tenant (P466) → CSV brut."""
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
-    RAW_ARENAS.parent.mkdir(parents=True, exist_ok=True)
-
-    query = """
-    SELECT ?team ?teamLabel ?arena ?arenaLabel ?lat ?lon ?capacity WHERE {
-      ?team wdt:P118 wd:Q155223;    # NBA
-            wdt:P115 ?arena.        # home venue
-      ?arena p:P625 ?coordStmt.
-      ?coordStmt psv:P625 ?coordNode.
-      ?coordNode wikibase:geoLatitude ?lat ;
-                 wikibase:geoLongitude ?lon .
-      OPTIONAL { ?arena wdt:P1083 ?capacity. }
+    q = """
+    SELECT ?arena ?arenaLabel ?teamLabel ?capacity ?coord WHERE {
+      ?team wdt:P118 wd:Q155223 .   # league = NBA
+      ?arena wdt:P466 ?team .       # tenant (occupant)
+      OPTIONAL { ?arena wdt:P1083 ?capacity }
+      OPTIONAL { ?arena wdt:P625  ?coord }
       SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
     }
     """
     r = requests.get(
         ENDPOINTS["wd_sparql"],
-        params={"format": "json", "query": query},
-        headers=UA,
-        timeout=60,
+        params={"format": "csv", "query": q},
+        headers={"User-Agent": "esiee-projet-data/1.0"},
+        timeout=60
     )
     r.raise_for_status()
-    _save_json(RAW_ARENAS, r.json())
+    RAW_ARENAS.write_bytes(r.content)  # RAW inchangé
     return RAW_ARENAS
+
 
 # ---------- Open-Elevation ----------
 def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False) -> Path:
@@ -195,10 +194,11 @@ def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False)
 # ---------- Aggregator ----------
 def get_raw(force: bool = False) -> dict[str, Path]:
     paths = {}
-    paths["teams"]  = fetch_balldontlie_teams(force=force)
-    paths["games"]  = fetch_balldontlie_games_2021(force=force, postseason=False)
+    paths["teams"] = fetch_balldontlie_teams(force=force)
+    paths["games"] = fetch_balldontlie_games_2021(force=force, postseason=False)
     try:
         paths["arenas"] = fetch_wikidata_arenas(force=force)
     except Exception as e:
         print("[WARN] wikidata fetch failed:", e)
     return paths
+
