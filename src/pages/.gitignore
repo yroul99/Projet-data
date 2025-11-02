@@ -1,4 +1,11 @@
-.venv/
+@"
+# Python
 __pycache__/
 *.pyc
-.DS_Store
+.venv/
+
+# Données générées / caches
+data/cleaned/*.csv
+data/raw/open_elevation_cache.json
+"@ | Set-Content .gitignore -Encoding UTF8
+
