@@ -1,23 +1,23 @@
 team_key,home_team,arena,lat,lon,capacity,games_home_n,avg_home_diff
 atlanta hawks,Atlanta Hawks,State Farm Arena,33.757222222222,-84.396388888889,19445,41,3.9
 boston celtics,Boston Celtics,TD Garden,42.366302777778,-71.062227777778,18624,41,6.98
-brooklyn nets,Brooklyn Nets,Meadowlands Arena,40.811666666667,-74.0675,20049,41,-2.02
+brooklyn nets,Brooklyn Nets,Barclays Center,40.68265,-73.974689,17732,41,-2.02
 charlotte hornets,Charlotte Hornets,Spectrum Center,35.225,-80.839166666667,19077,41,1.41
 chicago bulls,Chicago Bulls,United Center,41.880555555556,-87.674166666667,23500,41,2.63
 cleveland cavaliers,Cleveland Cavaliers,Rocket Arena,41.496388888889,-81.688055555556,20562,41,5.29
 dallas mavericks,Dallas Mavericks,American Airlines Center,32.790555555556,-96.810277777778,19200,41,6.29
 denver nuggets,Denver Nuggets,Ball Arena,39.748611111111,-105.0075,19155,41,2.39
-detroit pistons,Detroit Pistons,The Palace of Auburn Hills,42.696944444444,-83.245555555556,22076,41,-5.15
-golden state warriors,Golden State Warriors,Oakland Arena,37.750277777778,-122.20305555556,19596,41,9.88
+detroit pistons,Detroit Pistons,Little Caesars Arena,42.3412,-83.0549,20332,41,-5.15
+golden state warriors,Golden State Warriors,Chase Center,37.767833333333,-122.38738888889,18000,41,9.88
 houston rockets,Houston Rockets,Toyota Center,29.750833333333,-95.362222222222,18023,41,-6.8
 indiana pacers,Indiana Pacers,Gainbridge Fieldhouse,39.763888888889,-86.155555555556,18165,41,-0.56
-la clippers,LA Clippers,,,,,41,2.46
+la clippers,LA Clippers,Crypto.com Arena,34.043056,-118.267222,19060,41,2.46
 los angeles lakers,Los Angeles Lakers,Crypto.com Arena,34.043055555556,-118.26722222222,19060,41,-2.66
-memphis grizzlies,Memphis Grizzlies,Pyramid Arena,35.155555555556,-90.051944444444,21000,41,9.2
-miami heat,Miami Heat,Miami Arena,25.780833333333,-80.195555555556,17000,41,5.51
-milwaukee bucks,Milwaukee Bucks,Bradley Center,43.043611111111,-87.916944444444,18800,41,4.63
-minnesota timberwolves,Minnesota Timberwolves,Hubert H. Humphrey Metrodome,44.973888888889,-93.258055555556,64121,41,5.05
-new orleans pelicans,New Orleans Pelicans,Charlotte Coliseum,35.186388888889,-80.912777777778,24042,41,1.32
+memphis grizzlies,Memphis Grizzlies,FedExForum,35.138333333333,-90.050555555556,18119,41,9.2
+miami heat,Miami Heat,Kaseya Center,25.781388888889,-80.188055555556,16500,41,5.51
+milwaukee bucks,Milwaukee Bucks,Fiserv Forum,43.0451,-87.9182,17341,41,4.63
+minnesota timberwolves,Minnesota Timberwolves,Target Center,44.979444444444,-93.276111111111,19356,41,5.05
+new orleans pelicans,New Orleans Pelicans,Smoothie King Center,29.948888888889,-90.081944444444,18500,41,1.32
 new york knicks,New York Knicks,Madison Square Garden,40.750555555556,-73.993611111111,20789,41,-1.54
 oklahoma city thunder,Oklahoma City Thunder,Paycom Center,35.463333,-97.515,18203,41,-6.39
 orlando magic,Orlando Magic,Kia Center,28.539167,-81.383611,18846,41,-8.12
@@ -26,6 +26,6 @@ phoenix suns,Phoenix Suns,Mortgage Matchup Center,33.445833333333,-112.071388888
 portland trail blazers,Portland Trail Blazers,Moda Center,45.531666666667,-122.66666666667,20636,41,-4.98
 sacramento kings,Sacramento Kings,Golden 1 Center,38.58,-121.5,18500,41,-4.05
 san antonio spurs,San Antonio Spurs,Frost Bank Center,29.426944444444,-98.4375,18581,41,-0.15
-toronto raptors,Toronto Raptors,Rogers Centre,43.641388888889,-79.389166666667,39150,41,4.24
-utah jazz,Utah Jazz,Caesars Superdome,29.950833333333,-90.081111111111,75167,41,9.88
+toronto raptors,Toronto Raptors,Scotiabank Arena,43.643333333333,-79.379166666667,19800,41,4.24
+utah jazz,Utah Jazz,Delta Center,40.768333,-111.901111,19911,41,9.88
 washington wizards,Washington Wizards,Capital One Arena,38.898055555556,-77.020833333333,20674,41,-0.63
