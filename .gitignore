@@ -1,3 +1,18 @@
-﻿.venv/
+﻿# Python
 __pycache__/
-*.pyc
+*.py[cod]
+.venv/
+.env
+
+# Données lourdes ou temporaires
+data/raw/
+data/cache/
+data/cleaned/dataset_clean.csv
+data/cleaned/dataset_*.csv
+!data/cleaned/dataset_sample.csv
+
+# OS/IDE
+.DS_Store
+Thumbs.db
+.vscode/
+.ipynb_checkpoints/
