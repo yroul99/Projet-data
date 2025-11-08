@@ -34,7 +34,10 @@ def _read_games_df(p: Path) -> pd.DataFrame:
     df["date"] = pd.to_datetime(df["date"]).dt.date
     df["home_diff"] = df["home_pts"] - df["away_pts"]
     df = df[df["season"] == SEASON].drop_duplicates("id", keep="first")
-    df["team_key"] = df["home_team"].map(_normalize)  # clé pour joindre l'arène du domicile
+
+    # clés normalisées pour joindre aux arènes
+    df["team_key"] = df["home_team"].map(_normalize)         # domicile
+    df["away_team_key"] = df["away_team"].map(_normalize)    # extérieur
     return df
 
 
@@ -95,25 +98,24 @@ def _read_arenas_json(p: Path) -> pd.DataFrame:
 # ---------- Altitude (Open-Elevation, cache JSON) ----------
 def _attach_altitude(df_arenas: pd.DataFrame) -> pd.DataFrame:
     """
-    Ajoute la colonne elev_m en joignant sur lat/lon avec arrondi pour éviter
-    les ratés d'égalité flottante.
+    Ajoute la colonne elev_m en joignant sur lat/lon avec petit arrondi
+    pour éviter les ratés d'égalité flottante.
     """
     if df_arenas is None or df_arenas.empty or not {"lat","lon"}.issubset(df_arenas.columns):
         return df_arenas
 
-    # Assure-toi d'avoir un cache; sinon on le crée avec toutes les coords
+    # Crée le cache si absent
     if not RAW_ELEV.exists():
         coords = (df_arenas[["lat","lon"]]
                   .dropna().drop_duplicates().itertuples(index=False, name=None))
         from src.utils.get_data import fetch_open_elevation
         fetch_open_elevation(list(coords), force=False)
 
-    # Charge le cache
+    # Charge cache
     elev = pd.DataFrame(json.loads(RAW_ELEV.read_text()))
     if elev.empty:
         return df_arenas
 
-    # Arrondis cohérents des 2 côtés
     df = df_arenas.copy()
     df["lat_r"]  = df["lat"].astype(float).round(5)
     df["lon_r"]  = df["lon"].astype(float).round(5)
@@ -159,28 +161,54 @@ def _rest_features(df: pd.DataFrame) -> pd.DataFrame:
 def clean_2021() -> Path:
     df = _read_games_df(RAW_GAMES)
 
-    # Arènes
+    # 1) Arènes (Wikidata) + altitude
     if RAW_ARENAS.exists():
         arenas = _read_arenas_json(RAW_ARENAS)
-        arenas = _attach_altitude(arenas)   # ajoute elev_m si dispo
+        arenas = _attach_altitude(arenas)  # ajoute elev_m
+        # jointure DOMICILE (team_key)
         df = df.merge(arenas, on="team_key", how="left")
+        # duplique pour clarté (et compat dashboard)
+        df["home_elev_m"]   = df["elev_m"]
+        df["home_capacity"] = df["capacity"]
+
+        # jointure EXTERIEUR (away_team_key) pour récupérer away_elev_m
+        away_cols = arenas.rename(columns={
+            "team_key": "away_key",
+            "elev_m":   "away_elev_m",
+            "capacity": "away_capacity",
+            "lat":      "away_lat",
+            "lon":      "away_lon",
+            "arena":    "away_arena",
+        })
+        df = df.merge(
+            away_cols[["away_key", "away_elev_m", "away_capacity"]],
+            left_on="away_team_key", right_on="away_key", how="left"
+        ).drop(columns=["away_key"])
+
+        # Δ altitude (domicile – extérieur)
+        df["delta_elev"] = df["home_elev_m"] - df["away_elev_m"]
+
     else:
-        for c in ("arena", "lat", "lon", "capacity"):
+        for c in ("arena","lat","lon","capacity","elev_m",
+                  "home_elev_m","away_elev_m","delta_elev",
+                  "home_capacity","away_capacity"):
             df[c] = None
 
-    # Repos (B2B)
+    # 2) Repos / B2B
     df = _rest_features(df)
 
-    # Elo + marge attendue neutre + résiduel
+    # 3) Elo + marge attendue neutre + résiduel
     df = run_elo(df, k=20, use_mov=True, start_rating=1500.0)
     df, alpha, b0 = fit_expected_margin_and_residual(df)
     print(f"[ELO] alpha ≈ {alpha:.3f} | intercept b0 ≈ {b0:.3f}")
 
-    # Colonnes à écrire
+    # 4) Colonnes à écrire
     base_cols = [
         "date","season","home_team","away_team",
         "home_pts","away_pts","home_diff",
-        "arena","lat","lon","capacity","elev_m",
+        "arena","lat","lon","capacity","elev_m",       # domicile (compat dashboard existant)
+        "home_elev_m","away_elev_m","delta_elev",
+        "home_capacity","away_capacity",
         "home_rest_days","away_rest_days","home_b2b","away_b2b","rest_delta",
         "elo_home_pre","elo_away_pre","elo_delta_pre","elo_exp_home_win",
         "expected_margin_neutral","residual_margin",
@@ -188,11 +216,18 @@ def clean_2021() -> Path:
     cols = [c for c in base_cols if c in df.columns]
     df_out = df[cols].copy()
 
-    # Écriture
+    # 5) Écriture
     CLEAN_2021.parent.mkdir(parents=True, exist_ok=True)
     df_out.to_csv(CLEAN_2021, index=False)
     CLEAN_FILE.write_text(CLEAN_2021.read_text())
 
-    coords_ok = df_out[["lat", "lon"]].dropna().shape[0] if {"lat","lon"}.issubset(df_out.columns) else 0
+    coords_ok = df_out[["lat","lon"]].dropna().shape[0] if {"lat","lon"}.issubset(df_out.columns) else 0
     print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
+    try:
+    # scripts/ doit contenir __init__.py (tu l’as déjà fait)
+        from scripts.save_summary import main as save_sum
+        save_sum()
+    except Exception as e:
+        print("[WARN] summary skipped:", e)
+
     return CLEAN_2021
