@@ -7,6 +7,16 @@ import pandas as pd
 from config import RAW_GAMES, CLEAN_2021, CLEAN_FILE, SEASON, RAW_ARENAS, RAW_ELEV
 from src.utils.elo import run_elo, fit_expected_margin_and_residual
 
+import logging
+logging.basicConfig(level=logging.INFO, format="%(levelname)s:%(name)s:%(message)s")
+log = logging.getLogger("clean_data")
+
+log.info("Reading games from %s", RAW_GAMES)
+...
+log.warning("RAW_ELEV absent; attempting fetch_open_elevation(...)")
+...
+log.info("Wrote cleaned dataset to %s", CLEAN_2021)
+
 
 # ---------- Helpers ----------
 def _normalize(s: str) -> str:
@@ -224,10 +234,19 @@ def clean_2021() -> Path:
     coords_ok = df_out[["lat","lon"]].dropna().shape[0] if {"lat","lon"}.issubset(df_out.columns) else 0
     print(f"[OK] écrit: {CLEAN_2021} et {CLEAN_FILE} — coords non-null lignes = {coords_ok}")
     try:
-    # scripts/ doit contenir __init__.py (tu l’as déjà fait)
+
         from scripts.save_summary import main as save_sum
         save_sum()
     except Exception as e:
         print("[WARN] summary skipped:", e)
-
+ 
+    meta = {
+        "season": int(SEASON),
+        "sources": {
+            "games": "balldontlie …",
+            "arenas": "Wikidata SPARQL (voir docs/data_sources.md)",
+            "elevation_cache": str(RAW_ELEV),
+        }
+    }
+    Path("data/cleaned/metadata.json").write_text(json.dumps(meta, indent=2))
     return CLEAN_2021

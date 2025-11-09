@@ -1,7 +1,9 @@
 # scripts/save_summary.py
 from __future__ import annotations
-from pathlib import Path
+
 import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import statsmodels.api as sm
@@ -9,52 +11,80 @@ from config import CLEAN_FILE
 
 OUT = Path("data/cleaned/summary.json")
 
-def ci95_bootstrap_mean(x: np.ndarray, B: int = 5000, seed: int = 42):
-    rng = np.random.default_rng(seed)
-    boots = rng.choice(x, size=(B, x.size), replace=True)
-    means = boots.mean(axis=1)
-    lo, hi = np.percentile(means, [2.5, 97.5])
-    return float(lo), float(hi)
 
-def main():
-    df = pd.read_csv(CLEAN_FILE)
+def load_clean_df() -> pd.DataFrame:
+    """Charge le CSV, crée home_diff si besoin, et déduplique les matchs."""
+    p = Path(CLEAN_FILE)
+    df = pd.read_csv(p)
 
-    # ---- Baseline: moyenne home_diff + IC95 bootstrap
-    x = df["home_diff"].dropna().to_numpy()
-    lo, hi = ci95_bootstrap_mean(x)
+    if "home_diff" not in df.columns and {"home_pts", "away_pts"}.issubset(df.columns):
+        df["home_diff"] = df["home_pts"] - df["away_pts"]
+
+    keys = [c for c in ["date", "home_team", "away_team"] if c in df.columns]
+    if keys:
+        df = (
+            df.sort_values(keys)
+              .drop_duplicates(subset=keys, keep="first")
+              .reset_index(drop=True)
+        )
+    return df
+
+
+def ci95(mean: float, std: float, n: int) -> list[float]:
+    se = std / np.sqrt(n)
+    return [float(mean - 1.96 * se), float(mean + 1.96 * se)]
+
+
+def main() -> None:
+    df = load_clean_df()
+
+    # ---- Baseline (home_diff) ----
+    y = df["home_diff"].astype(float)
+    n = int(y.notna().sum())
+    m = float(y.mean())
+    sd = float(y.std(ddof=1))
     baseline = {
-        "n": int(df.shape[0]),
-        "home_diff_mean": float(x.mean()),
-        "home_diff_ci95": [lo, hi],
+        "n": n,
+        "home_diff_mean": m,
+        "home_diff_ci95": ci95(m, sd, n),
     }
 
-    # ---- Intercept b0 et pente alpha via OLS: home_diff ~ 1 + elo_delta_pre
-    if {"home_diff", "elo_delta_pre"}.issubset(df.columns):
-        m = df[["home_diff", "elo_delta_pre"]].dropna()
-        X = sm.add_constant(m["elo_delta_pre"])
-        y = m["home_diff"]
-        ols = sm.OLS(y, X).fit(cov_type="HC1")
-
-        params = ols.params
-        ci = ols.conf_int()
-
-        out_elo = {
-            "n": int(m.shape[0]),
-            "b0": float(params["const"]),
-            "b0_ci95": [float(ci.loc["const", 0]), float(ci.loc["const", 1])],
-            "b0_p": float(ols.pvalues["const"]),
-            "alpha": float(params["elo_delta_pre"]),
-            "alpha_ci95": [float(ci.loc["elo_delta_pre", 0]), float(ci.loc["elo_delta_pre", 1])],
-            "alpha_p": float(ols.pvalues["elo_delta_pre"]),
-        }
+    # ---- Régression linéaire : home_diff ~ b0 + alpha * (Elo_home - Elo_away) ----
+    if "elo_delta_pre" in df.columns:
+        xdelta = df["elo_delta_pre"].astype(float)
+        xname = "elo_delta_pre"
+    elif {"elo_home_pre", "elo_away_pre"}.issubset(df.columns):
+        xdelta = (df["elo_home_pre"] - df["elo_away_pre"]).astype(float)
+        xname = "elo_home_pre - elo_away_pre"
     else:
-        out_elo = {"note": "elo_delta_pre/home_diff manquants dans le CSV."}
+        raise SystemExit("Colonnes Elo absentes pour la régression.")
 
-    summary = {"baseline": baseline, "elo_linear": out_elo}
+    X = sm.add_constant(xdelta)
+    ols = sm.OLS(y, X, missing="drop").fit()
 
-    OUT.parent.mkdir(parents=True, exist_ok=True)
-    OUT.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
+    ci = ols.conf_int()
+    b0 = float(ols.params["const"])
+    alpha = float(ols.params[X.columns[1]])
+    b0_ci = [float(v) for v in ci.loc["const"].tolist()]
+    alpha_ci = [float(v) for v in ci.loc[X.columns[1]].tolist()]
+
+    out = {
+        "baseline": baseline,
+        "elo_linear": {
+            "n": int(ols.nobs),
+            "b0": b0,
+            "b0_ci95": b0_ci,
+            "b0_p": float(ols.pvalues["const"]),
+            "alpha": alpha,
+            "alpha_ci95": alpha_ci,
+            "alpha_p": float(ols.pvalues[X.columns[1]]),
+            "x_name": xname,
+        },
+    }
+
+    OUT.write_text(json.dumps(out, indent=2))
     print(f"[OK] summary → {OUT}")
+
 
 if __name__ == "__main__":
     main()
