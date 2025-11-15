@@ -1,0 +1,53 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  quality-and-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.9"]
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Lint with ruff
+        run: |
+          echo "🔍 Running ruff checks..."
+          ruff check . --select=E,W,F,I --exclude=.venv
+
+      - name: Format check with black
+        run: |
+          echo "🎨 Checking black formatting..."
+          black --check . --exclude=.venv
+
+      - name: Run pytest
+        run: |
+          echo "🧪 Running tests..."
+          pytest tests/ -v --cov=src --cov-report=term-missing --tb=short
+
+      - name: Build & smoke test Dash app
+        run: |
+          echo "🚀 Testing Dash app loads..."
+          python -c "from main import app; print('✅ Dash app loads successfully')"
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v3
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false

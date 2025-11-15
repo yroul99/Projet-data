@@ -1,0 +1,26 @@
+repos:
+  - repo: https://github.com/psf/black
+    rev: 23.10.1
+    hooks:
+      - id: black
+        language_version: python3.9
+        exclude: ^(.venv|venv|.ruff_cache)/
+
+  # Ruff désactivé car cause des E902 fantômes sous Windows
+  # - repo: https://github.com/astral-sh/ruff-pre-commit
+  #   rev: v0.1.8
+  #   hooks:
+  #     - id: ruff
+  #       args: [--fix, --select=E,W,F,I, --ignore=E501,E902]
+  #       files: ^(src/|scripts/|tests/|main\.py|config\.py)$
+  #       exclude: ^(.venv|venv|__pycache__|.ruff_cache)/
+
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+      - id: check-yaml
+      - id: check-merge-conflict
+      - id: debug-statements
+        exclude: ^(.venv|venv)/

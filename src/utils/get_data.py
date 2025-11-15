@@ -1,32 +1,50 @@
-# src/utils/get_data.py
+"""Utilitaires d'ingestion: balldontlie, Wikidata et Open-Elevation."""
 from __future__ import annotations
-import json, time
+import json
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, Any, List, Tuple
 import requests
 
 from config import (
-    ENDPOINTS, RAW_GAMES, RAW_TEAMS, RAW_ARENAS, RAW_ELEV,
-    SEASON, BALLDONTLIE_API_KEY
+    ENDPOINTS,
+    RAW_GAMES,
+    RAW_TEAMS,
+    RAW_ARENAS,
+    RAW_ELEV,
+    SEASON,
+    BALLDONTLIE_API_KEY,
 )
 
 UA = {"User-Agent": "esiee-projet-data/1.0"}
 
+
 def _fresh_enough(path: Path, hours: int = 24) -> bool:
-    return path.exists() and (datetime.now() - datetime.fromtimestamp(path.stat().st_mtime) < timedelta(hours=hours))
+    """Renvoie True si le fichier existe et reste dans la fenêtre de fraîcheur."""
+    return path.exists() and (
+        datetime.now() - datetime.fromtimestamp(path.stat().st_mtime)
+        < timedelta(hours=hours)
+    )
+
 
 def _save_json(path: Path, data) -> None:
+    """Écrit une charge JSON sérialisable en UTF-8."""
     path.write_text(json.dumps(data, ensure_ascii=False))
 
+
 def _auth_headers() -> Dict[str, str]:
+    """Ajoute la clé API balldontlie si fournie dans l'environnement."""
     h = UA.copy()
     if BALLDONTLIE_API_KEY:
         # balldontlie expects the raw key, not "Bearer ..."
         h["Authorization"] = BALLDONTLIE_API_KEY
     return h
 
-def _get_with_backoff(url: str, *, params: Dict[str, Any], headers: Dict[str, str], retries: int = 6):
+
+def _get_with_backoff(
+    url: str, *, params: Dict[str, Any], headers: Dict[str, str], retries: int = 6
+):
     """GET with exponential backoff; handles HTTP 429 via Retry-After if present."""
     delay = 1.0
     for _ in range(retries):
@@ -41,13 +59,16 @@ def _get_with_backoff(url: str, *, params: Dict[str, Any], headers: Dict[str, st
         return r
     raise RuntimeError(f"Too many 429 responses on {url} with {params}")
 
+
 # ---------- balldontlie (teams) ----------
 def fetch_balldontlie_teams(force: bool = False) -> Path:
+    """Télécharge et met en cache la liste statique des franchises NBA."""
     if _fresh_enough(RAW_TEAMS) and not force:
         return RAW_TEAMS
     r = _get_with_backoff(ENDPOINTS["bl_teams"], params={}, headers=_auth_headers())
     _save_json(RAW_TEAMS, r.json())
     return RAW_TEAMS
+
 
 # ---------- balldontlie (regular season 2021-22 with cursor pagination) ----------
 def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) -> Path:
@@ -74,7 +95,6 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
             print(f"[resume] RAW existant : {len(all_games)} matchs chargés")
         except Exception:
             pass
-
 
     windows = [
         ("2021-10-01", "2021-11-01"),
@@ -113,7 +133,10 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
                     new_count += 1
 
             _save_json(RAW_GAMES, all_games)
-            print(f"[{start}→{end}] +{new_count} (total {len(all_games)}) cursor={meta.get('next_cursor')}")
+            print(
+                f"[{start}→{end}] +{new_count} (total {len(all_games)}) "
+                f"cursor={meta.get('next_cursor')}"
+            )
 
             cursor = meta.get("next_cursor")
             if not data or not cursor:
@@ -125,9 +148,12 @@ def fetch_balldontlie_games_2021(force: bool = False, postseason: bool = False) 
     print(f"[done] total RAW = {len(all_games)}")
     return RAW_GAMES
 
+
 # --- WIKIDATA (arènes NBA) en JSON ---
 
+
 def fetch_wikidata_arenas(force: bool = False) -> Path:
+    """Exécute la requête SPARQL et met en cache le JSON des arènes."""
     if RAW_ARENAS.exists() and not force:
         return RAW_ARENAS
 
@@ -149,15 +175,15 @@ def fetch_wikidata_arenas(force: bool = False) -> Path:
         timeout=60,
     )
     r.raise_for_status()
-    RAW_ARENAS.parent.mkdir(parents=True, exist_ok=True)   # <-- AJOUT
+    RAW_ARENAS.parent.mkdir(parents=True, exist_ok=True)  # <-- AJOUT
     RAW_ARENAS.write_text(json.dumps(r.json(), ensure_ascii=False))
     return RAW_ARENAS
 
 
-
-
 # ---------- Open-Elevation ----------
-def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False) -> Path:
+def fetch_open_elevation(
+    coords: List[Tuple[float, float]], force: bool = False
+) -> Path:
     """
     Fetch elevations for list of (lat, lon); cache in RAW_ELEV as list of dicts:
     [{latitude, longitude, elevation}, ...]
@@ -170,7 +196,11 @@ def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False)
             existing = json.loads(RAW_ELEV.read_text())
         except Exception:
             existing = []
-    have = {(round(e["latitude"], 6), round(e["longitude"], 6)) for e in existing if all(k in e for k in ("latitude","longitude"))}
+    have = {
+        (round(e["latitude"], 6), round(e["longitude"], 6))
+        for e in existing
+        if all(k in e for k in ("latitude", "longitude"))
+    }
 
     # normalize & dedupe
     todo = []
@@ -185,7 +215,7 @@ def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False)
     url = ENDPOINTS["open_elevation"]
     out = existing[:]
     for i in range(0, len(todo), 100):
-        chunk = {"locations": todo[i:i+100]}
+        chunk = {"locations": todo[i : i + 100]}
         r = requests.post(url, json=chunk, timeout=60)
         r.raise_for_status()
         out.extend(r.json().get("results", []))
@@ -194,8 +224,10 @@ def fetch_open_elevation(coords: List[Tuple[float, float]], force: bool = False)
     RAW_ELEV.write_text(json.dumps(out, ensure_ascii=False))
     return RAW_ELEV
 
+
 # ---------- Aggregator ----------
 def get_raw(force: bool = False) -> dict[str, Path]:
+    """Surcouche pratique pour rafraîchir tous les artefacts bruts."""
     paths = {}
     paths["teams"] = fetch_balldontlie_teams(force=force)
     paths["games"] = fetch_balldontlie_games_2021(force=force, postseason=False)
@@ -204,4 +236,3 @@ def get_raw(force: bool = False) -> dict[str, Path]:
     except Exception as e:
         print("[WARN] wikidata fetch failed:", e)
     return paths
-

@@ -1,3 +1,4 @@
+"""Analyse de base: avantage domicile brut et intercept de régression."""
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -21,7 +22,10 @@ se_brut = std_brut / np.sqrt(n)
 ci_low = mean_brut - 1.96 * se_brut
 ci_high = mean_brut + 1.96 * se_brut
 
-print(f"[BRUT] mean(home_diff) = {mean_brut:.2f}  (IC95% ≈ [{ci_low:.2f}, {ci_high:.2f}])  n={n}")
+print(
+    f"[BRUT] mean(home_diff) = {mean_brut:.2f}  "
+    f"(IC95% ≈ [{ci_low:.2f}, {ci_high:.2f}])  n={n}"
+)
 
 # 2) Edge AJUSTÉ = intercept d’une régression home_diff ~ const + elo_delta_pre
 X = sm.add_constant(df["elo_delta_pre"].fillna(0.0))
@@ -32,5 +36,11 @@ ci_b0 = model.conf_int().loc["const"].tolist()
 p_b0 = model.pvalues.get("const", float("nan"))
 
 print("\n[AJUSTÉ Elo]")
-print(f"b0 (intercept) = {b0:.3f}   IC95% = [{ci_b0[0]:.3f}, {ci_b0[1]:.3f}]   p={p_b0:.3g}")
-print("(Si l’IC de b0 n’inclut pas 0 → avantage du terrain persistant, même à Elo neutre.)")
+print(
+    f"b0 (intercept) = {b0:.3f}   "
+    f"IC95% = [{ci_b0[0]:.3f}, {ci_b0[1]:.3f}]   p={p_b0:.3g}"
+)
+print(
+    "(Si l'IC de b0 n'inclut pas 0 → avantage du terrain persistant, "
+    "même à Elo neutre.)"
+)

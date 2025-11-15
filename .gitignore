@@ -16,3 +16,6 @@ data/cleaned/dataset_*.csv
 Thumbs.db
 .vscode/
 .ipynb_checkpoints/
+
+# Local manifests / diagnostics
+MANIFEST*.txt*

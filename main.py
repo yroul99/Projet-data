@@ -1,4 +1,4 @@
-# main.py
+"""Point d'entrée Dash: expose le serveur et enregistre les callbacks."""
 import os
 from dash import Dash, html
 from src.pages.home import layout as home_layout, register_callbacks
@@ -9,12 +9,9 @@ app = Dash(
     suppress_callback_exceptions=False,
 )
 app.layout = html.Div([home_layout])
-
-# Enregistre tous les callbacks définis dans la page
 register_callbacks(app)
 
-# Expose l'objet WSGI pour gunicorn/render/heroku
-server = app.server
+server = app.server  # cible WSGI attendue par les hébergeurs
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", "8050"))
