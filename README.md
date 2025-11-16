@@ -69,13 +69,13 @@ Le nettoyage applique :
 
 ```mermaid
 flowchart TD
-	main[main.py] -->|Initialise Dash app| layout[src/pages/home.py]
-	layout -->|register_callbacks()| callbacks[(Callbacks)]
-	callbacks --> dataLoader[load_df / summary_block]
-	dataLoader --> files[data/cleaned/dataset_clean.csv\nsummary.json]
-	callbacks --> utils[src/utils/*]
-	scripts[scripts/*.py] --> files
-	tests[tests/*.py] --> main
+    main[main.py] -->|Initialise Dash app| layout[src/pages/home.py]
+    layout -->|register_callbacks()| callbacks[(Callbacks)]
+    callbacks --> dataLoader[load_df / summary_block]
+    dataLoader --> files["data/cleaned/dataset_clean.csv\nsummary.json"]
+    callbacks --> utils[src/utils/*]
+    scripts[scripts/*.py] --> files
+    tests[tests/*.py] --> main
 ```
 
 - `main.py` : crée l’application Dash, importe `src/pages/home.py` et enregistre les callbacks.
